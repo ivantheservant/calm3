@@ -1,0 +1,1665 @@
+<!DOCTYPE html>
+<!--
+  ──────────────────────────────────────────────────────────────────────
+  CALM CORNER  ·  calmnext  ·  a cosy press-play practice space
+  ──────────────────────────────────────────────────────────────────────
+  CUSTOMISE — two places only:
+
+  1) CONFIG  (★ EDIT HERE ★)
+     • name, greeting, colours, every word she sees
+     • activity on/off (enabled: true/false), order array
+     • dailyMoment.flow — the Start here sequence
+     • activities.reminders.items — her daily anchors (add / remove freely)
+     • activities.tasks.items — Little joys list
+
+  2) :root  (★ THEME ★)
+     • colours, fonts, animation speed
+
+  DATA — all stored on THIS device only (localStorage). Nothing is sent anywhere.
+     • cc_mood  — mood check-ins
+     • cc_hard  — "one hard thing" records
+     • cc_rem   — today's reminder ticks (resets each day, no history kept)
+  Backup & data screen:
+     • Export mood → calendar (.ics)
+     • Back up EVERYTHING (.json)  ← full backup of mood + hard things
+     • Import a file — accepts BOTH the old app's .ics AND a .json backup
+       (this is how she brings her history from the old app into this one)
+  Works online (GitHub Pages link) or offline (open the saved .html file).
+  ──────────────────────────────────────────────────────────────────────
+-->
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no"/>
+<meta name="theme-color" content="#fdf4ff"/>
+<title>Calm Corner</title>
+<style>
+/* ★ THEME ★ */
+:root{
+  --bg-1:#fdf4ff; --bg-2:#fef3e8; --bg-3:#f0fdf4;
+  --card:#ffffff;
+  --ink-strong:#2d1b4e;
+  --ink:#4a3b6b;
+  --ink-soft:#9b8cb0;
+  --ink-faint:#d8cfe8;
+  --line:#f0eaf8;
+  --chip:#f5f0fd;
+  --accent:#8b5cf6;
+  --safe:#10b981;
+  --latte:#c4956a;
+  --warm:#f59e0b;
+  --pink:#f472b6;
+  --sky:#38bdf8;
+  --radius:22px;
+  --speed:280ms;
+  --font:ui-rounded,"SF Pro Rounded",-apple-system,"Segoe UI",system-ui,sans-serif;
+}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent;margin:0;padding:0;}
+html,body{height:100%;}
+body{font-family:var(--font);background:linear-gradient(145deg,var(--bg-1) 0%,var(--bg-2) 55%,var(--bg-3) 100%);
+  color:var(--ink);display:flex;padding:12px;min-height:100vh;}
+#app{width:100%;max-width:400px;margin:auto;background:var(--card);border-radius:30px;
+  box-shadow:0 28px 64px -20px rgba(45,27,78,.22);overflow:hidden;
+  min-height:calc(100vh - 24px);display:flex;flex-direction:column;}
+button{font-family:inherit;cursor:pointer;border:none;background:none;color:inherit;}
+svg{display:block;} .ic{width:100%;height:100%;}
+.fade{animation:_f var(--speed) ease both;}
+@keyframes _f{from{opacity:0;transform:translateY(5px)}to{opacity:1;transform:none}}
+
+/* ── bar ── */
+.bar{display:flex;align-items:center;gap:10px;padding:18px 18px 12px;
+  position:sticky;top:0;z-index:5;background:var(--card);}
+.iconbtn{width:40px;height:40px;border-radius:50%;background:var(--chip);
+  display:flex;align-items:center;justify-content:center;color:var(--ink-soft);
+  transition:transform var(--speed);}
+.iconbtn:active{transform:scale(.9);}
+.bar-title{font-size:13px;font-weight:600;letter-spacing:.04em;color:var(--ink-soft);}
+
+/* ── pane ── */
+.pane{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;
+  padding:26px 26px 32px;text-align:center;gap:0;}
+.gap{display:flex;flex-direction:column;align-items:center;gap:22px;width:100%;}
+.stack{display:flex;flex-direction:column;align-items:center;gap:10px;width:100%;}
+
+/* ── home ── */
+.home{flex:1;display:flex;flex-direction:column;padding:28px 22px 22px;}
+.eyebrow{display:flex;align-items:center;gap:6px;font-size:12px;font-weight:700;
+  letter-spacing:.06em;color:var(--latte);margin-bottom:6px;}
+.eyebrow .dot{width:14px;height:14px;}
+h1.greet{font-size:25px;line-height:1.25;font-weight:700;color:var(--ink-strong);margin-bottom:4px;}
+.sub{font-size:14px;color:var(--ink-soft);line-height:1.5;margin-bottom:14px;}
+
+/* anchors */
+.anchor{display:flex;align-items:center;gap:12px;width:100%;text-align:left;
+  padding:14px 16px;border-radius:var(--radius);margin-bottom:10px;
+  border:1.5px solid transparent;transition:transform var(--speed);}
+.anchor:active{transform:scale(.985);}
+.anchor .chip{width:44px;height:44px;border-radius:13px;display:flex;align-items:center;
+  justify-content:center;flex:0 0 auto;}
+.anchor .chip svg{width:22px;height:22px;}
+.anchor b{display:block;font-size:16px;font-weight:700;color:var(--ink-strong);}
+.anchor span{font-size:12px;color:var(--ink-soft);}
+.anchor.start{background:linear-gradient(135deg,#f3e8ff,#fce7f3);border-color:#e9d5ff;}
+.anchor.start .chip{background:#8b5cf622;color:#8b5cf6;}
+.anchor.mood-entry{background:linear-gradient(135deg,#fef9ee,#fdf4e3);border-color:#fde68a;}
+.anchor.mood-entry .chip{background:#f59e0b22;color:#f59e0b;}
+.anchor.bmb{background:linear-gradient(135deg,#e6f9f3,#f0fdf9);border-color:#a7f3d0;}
+.anchor.bmb .chip{background:#10b98122;color:#10b981;}
+.anchor.flash{background:linear-gradient(135deg,#e0f2fe,#eff6ff);border-color:#bae6fd;}
+.anchor.flash .chip{background:#0ea5e922;color:#0ea5e9;}
+.anchor.reward{background:linear-gradient(135deg,#fef9c3,#fef3c7);border-color:#fde68a;}
+.anchor.reward .chip{background:#eab30822;color:#d97706;}
+.anchor.more{background:linear-gradient(135deg,#f5f3ff,#faf5ff);border-color:#e9d5ff;}
+.anchor.more .chip{background:#8b5cf618;color:#8b5cf6;}
+/* rewards screen */
+.stars-today{display:flex;flex-direction:column;align-items:center;gap:2px;}
+.st-num{font-size:40px;font-weight:700;color:#d97706;line-height:1;}
+.st-cap{font-size:12px;color:var(--ink-soft);}
+.goal-card{width:100%;border:1.5px solid var(--line);border-radius:18px;padding:16px;background:var(--card);
+  box-shadow:0 6px 18px -12px rgba(45,27,78,.2);}
+.goal-title{font-size:13px;font-weight:700;color:var(--ink-strong);margin-bottom:10px;letter-spacing:.02em;}
+.goal-row{display:flex;align-items:center;gap:10px;padding:7px 0;}
+.goal-box{width:22px;height:22px;border-radius:7px;border:2px solid var(--ink-faint);flex:0 0 auto;
+  display:flex;align-items:center;justify-content:center;color:#fff;}
+.goal-box svg{width:12px;height:12px;}
+.goal-row.on .goal-box{background:var(--safe);border-color:var(--safe);}
+.goal-label{font-size:13.5px;color:var(--ink);line-height:1.35;}
+.goal-row.on .goal-label{color:var(--ink-soft);}
+.reward-win{margin-top:12px;background:linear-gradient(135deg,#fef9c3,#fce7f3);border-radius:14px;
+  padding:14px;text-align:center;font-size:14px;font-weight:600;color:#b45309;display:flex;
+  flex-direction:column;align-items:center;gap:6px;}
+.reward-win div{font-size:14px;}
+.reward-soft{margin-top:12px;background:var(--chip);border-radius:14px;padding:12px;
+  text-align:center;font-size:13px;color:var(--ink-soft);}
+.garden-teaser{width:100%;background:linear-gradient(135deg,#ecfccb,#f0fdf4);border:1.5px solid #d9f99d;
+  border-radius:14px;padding:12px 14px;font-size:13px;color:#4d7c0f;text-align:left;line-height:1.5;}
+/* room scene */
+.room-wrap{width:100%;border-radius:16px;overflow:hidden;box-shadow:0 8px 22px -12px rgba(45,27,78,.3);
+  border:1.5px solid var(--line);}
+.room-cap{font-size:12.5px;color:var(--ink-soft);text-align:center;line-height:1.45;
+  background:var(--chip);border-radius:12px;padding:8px 12px;width:100%;}
+
+/* section label */
+.picklabel{font-size:10px;font-weight:700;letter-spacing:.09em;text-transform:uppercase;
+  color:var(--ink-faint);text-align:left;margin:16px 2px 8px;}
+
+/* activity rows */
+.list{display:flex;flex-direction:column;gap:9px;}
+.row{display:flex;align-items:center;gap:13px;width:100%;text-align:left;
+  padding:13px 14px;border-radius:var(--radius);background:var(--card);
+  border:1.5px solid var(--line);box-shadow:0 4px 14px -10px rgba(45,27,78,.18);
+  transition:transform var(--speed);}
+.row:active{transform:scale(.98);}
+.row .chip{width:44px;height:44px;border-radius:13px;display:flex;align-items:center;
+  justify-content:center;flex:0 0 auto;}
+.row .chip svg{width:21px;height:21px;}
+.row b{display:block;font-size:16px;font-weight:600;color:var(--ink-strong);}
+.row span{font-size:12px;color:var(--ink-soft);}
+.foot{font-size:11px;color:var(--ink-faint);text-align:center;margin-top:auto;padding-top:18px;}
+
+/* ── text styles ── */
+.big{font-size:26px;font-weight:300;color:var(--ink-strong);line-height:1.3;max-width:18rem;}
+.lead{font-size:17px;color:var(--ink);max-width:17rem;line-height:1.45;}
+.hint{font-size:13px;color:var(--ink-soft);max-width:18rem;line-height:1.55;}
+.count{font-size:62px;font-weight:300;color:var(--ink-strong);line-height:1;}
+
+/* dots */
+.dots{display:flex;gap:6px;}
+.dots i{width:7px;height:7px;border-radius:50%;background:var(--ink-faint);transition:background var(--speed);}
+
+/* tap circle */
+.tap{width:168px;height:168px;border-radius:50%;color:#fff;display:flex;flex-direction:column;
+  align-items:center;justify-content:center;gap:7px;
+  box-shadow:0 16px 36px -12px rgba(45,27,78,.38);transition:transform var(--speed);}
+.tap:active{transform:scale(.94);}
+.tap svg{width:38px;height:38px;}
+.tap small{font-size:14px;font-weight:300;}
+
+/* pill buttons */
+.btn{padding:14px 40px;border-radius:999px;font-size:16px;font-weight:600;color:#fff;
+  background:var(--accent);transition:transform var(--speed);display:inline-block;}
+.btn:active{transform:scale(.96);}
+.btn-soft{padding:11px 28px;border-radius:999px;font-size:14px;background:var(--chip);
+  color:var(--ink);font-weight:500;}
+.btn-ghost{font-size:13px;color:var(--ink-soft);padding:7px 16px;}
+
+/* breathing */
+.breath-wrap{height:200px;display:flex;align-items:center;justify-content:center;}
+.breath{width:180px;height:180px;border-radius:50%;display:flex;align-items:center;justify-content:center;
+  background:radial-gradient(circle at 36% 30%,#bae6fd 0%,#7dd3fc 55%,#38bdf8 100%);
+  box-shadow:0 0 56px rgba(56,189,248,.35);transform:scale(.62);}
+.breath i{display:block;width:104px;height:104px;border-radius:50%;background:rgba(255,255,255,.38);}
+
+/* finished badge */
+.badge{width:74px;height:74px;border-radius:50%;background:#10b9811f;color:var(--safe);
+  display:flex;align-items:center;justify-content:center;}
+.badge svg{width:36px;height:36px;}
+
+/* tasks / reminders (shared) */
+.tasks{display:flex;flex-direction:column;gap:10px;width:100%;}
+.task{display:flex;align-items:center;gap:12px;width:100%;text-align:left;padding:13px 14px;
+  border-radius:16px;background:var(--card);border:1.5px solid var(--line);
+  transition:transform var(--speed);}
+.task:active{transform:scale(.98);}
+.task .emoji{font-size:20px;width:26px;text-align:center;flex:0 0 auto;}
+.task b{font-size:15px;font-weight:400;color:var(--ink);flex:1;line-height:1.35;}
+.task .box{width:24px;height:24px;border-radius:7px;border:2px solid var(--ink-faint);
+  display:flex;align-items:center;justify-content:center;color:#fff;flex:0 0 auto;}
+.task.done .box{background:var(--safe);border-color:var(--safe);}
+.task.done .box svg{width:13px;height:13px;}
+.task.done b{color:var(--ink-soft);}
+.wpts{font-size:11px;font-weight:700;color:#d97706;background:#f59e0b1a;border-radius:8px;
+  padding:2px 7px;flex:0 0 auto;}
+.task.done .wpts{color:var(--ink-soft);background:var(--chip);}
+.hard-del{width:28px;height:28px;border-radius:8px;background:transparent;color:var(--ink-faint);
+  flex:0 0 auto;display:flex;align-items:center;justify-content:center;transition:all var(--speed);}
+.hard-del:active{transform:scale(.9);}
+.hard-del svg{width:15px;height:15px;}
+
+/* ── mood entry ── */
+.mood-readout{display:flex;flex-direction:column;align-items:center;gap:3px;}
+.mood-readout .num{width:74px;height:74px;border-radius:26px;display:flex;align-items:center;
+  justify-content:center;font-size:30px;font-weight:700;color:#fff;
+  transition:all var(--speed);box-shadow:0 12px 26px -8px rgba(45,27,78,.4);}
+.mood-readout .num.empty{background:var(--chip);color:var(--ink-faint);font-size:24px;box-shadow:none;}
+.mood-readout .cap{font-size:11px;color:var(--ink-soft);letter-spacing:.05em;}
+.mood-scale{position:relative;display:flex;align-items:center;width:100%;padding:4px 0;}
+.ms-track{position:absolute;left:8px;right:8px;top:50%;height:7px;border-radius:99px;
+  transform:translateY(-50%);opacity:.6;
+  background:linear-gradient(90deg,#fda4af 0%,#fbbf24 32%,#cbd5e1 50%,#6ee7b7 70%,#10b981 100%);}
+.ms-btn{position:relative;flex:1;height:48px;display:flex;align-items:center;justify-content:center;
+  background:transparent;border:none;z-index:1;}
+.ms-btn:active .ms-dot{transform:scale(.86);}
+.ms-dot{width:25px;height:25px;border-radius:50%;display:flex;align-items:center;justify-content:center;
+  font-size:9.5px;font-weight:700;background:#fff;color:var(--ink-soft);
+  border:2px solid var(--line);transition:all var(--speed);}
+.ms-dot.sel{width:36px;height:36px;font-size:13px;color:#fff;border-color:#fff;
+  box-shadow:0 6px 18px -3px rgba(45,27,78,.45);}
+.mood-note{width:100%;border:1.5px solid var(--line);border-radius:14px;
+  padding:11px 14px;font-family:var(--font);font-size:14px;color:var(--ink);
+  background:var(--chip);resize:none;outline:none;min-height:72px;
+  transition:border-color var(--speed);}
+.mood-note:focus{border-color:var(--accent);}
+.mood-note::placeholder{color:var(--ink-faint);}
+.mood-row{display:flex;gap:10px;width:100%;}
+.mood-row .btn{flex:1;}
+.mood-row .btn-ghost{flex:0 0 auto;padding:14px 18px;}
+
+/* ── history / chart ── */
+.seg{display:flex;gap:0;border-radius:999px;overflow:hidden;border:1.5px solid var(--line);
+  width:100%;margin-bottom:4px;}
+.seg button{flex:1;padding:9px 0;font-size:13px;font-weight:600;color:var(--ink-soft);
+  background:var(--chip);transition:all var(--speed);}
+.seg button.on{background:var(--accent);color:#fff;}
+#chart-wrap{width:100%;overflow-x:auto;}
+canvas#chart{display:block;width:100%;height:180px;}
+.entry-list{width:100%;display:flex;flex-direction:column;gap:7px;max-height:200px;overflow-y:auto;}
+.entry-row{display:flex;align-items:center;gap:10px;padding:9px 12px;border-radius:12px;
+  background:var(--chip);text-align:left;}
+.entry-score{width:32px;height:32px;border-radius:50%;display:flex;align-items:center;
+  justify-content:center;font-size:13px;font-weight:700;color:#fff;flex:0 0 auto;}
+.entry-meta{font-size:12px;color:var(--ink-soft);}
+.entry-note{font-size:13px;color:var(--ink);margin-top:1px;}
+.linkrow{font-size:13px;color:var(--accent);font-weight:600;padding:8px;}
+
+/* ── hard thing ── */
+.hard-note{width:100%;border:1.5px solid var(--line);border-radius:14px;padding:12px 14px;
+  font-family:var(--font);font-size:15px;color:var(--ink);background:var(--chip);
+  resize:none;outline:none;min-height:88px;transition:border-color var(--speed);}
+.hard-note:focus{border-color:var(--accent);}
+.hard-note::placeholder{color:var(--ink-faint);}
+.hard-item{display:flex;gap:11px;align-items:flex-start;padding:11px 13px;border-radius:14px;
+  background:var(--chip);text-align:left;width:100%;}
+.hard-item .em{font-size:18px;flex:0 0 auto;}
+.hard-item .t{font-size:14px;color:var(--ink);line-height:1.4;}
+.hard-item .d{font-size:11px;color:var(--ink-soft);margin-top:2px;}
+
+/* ── data / backup ── */
+.data-list{display:flex;flex-direction:column;gap:11px;width:100%;}
+.data-btn{display:flex;align-items:center;gap:13px;width:100%;text-align:left;padding:15px 16px;
+  border-radius:16px;background:var(--card);border:1.5px solid var(--line);
+  box-shadow:0 4px 14px -10px rgba(45,27,78,.18);transition:transform var(--speed);}
+.data-btn:active{transform:scale(.98);}
+.data-btn .chip{width:42px;height:42px;border-radius:12px;display:flex;align-items:center;
+  justify-content:center;flex:0 0 auto;}
+.data-btn .chip svg{width:20px;height:20px;}
+.data-btn b{display:block;font-size:15px;font-weight:600;color:var(--ink-strong);}
+.data-btn span{font-size:12px;color:var(--ink-soft);}
+.data-note{font-size:12px;color:var(--ink-soft);line-height:1.55;background:var(--chip);
+  border-radius:14px;padding:12px 14px;width:100%;text-align:left;}
+/* reminder groups */
+.rem-group{width:100%;}
+.rem-glabel{font-size:11px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;
+  color:var(--ink-faint);text-align:left;margin:0 2px 8px;}
+.rem-more{width:100%;padding:12px 14px;border-radius:14px;background:var(--chip);
+  border:1.5px dashed var(--ink-faint);color:var(--ink-soft);font-size:14px;font-weight:600;
+  transition:transform var(--speed);}
+.rem-more:active{transform:scale(.98);}
+</style>
+</head>
+<body><div id="app"></div>
+<script>
+/* ════════════════════════════════════════════════════════════
+   ★ EDIT HERE ★   — everything customisable lives in CONFIG.
+   ════════════════════════════════════════════════════════════ */
+const CONFIG={
+  personalization:{
+    name:"",               // e.g. "Mia"  →  "Hi, Mia ✨"
+    favouriteColours:[]
+  },
+  home:{
+    eyebrow:"your calm corner ✨",
+    line:"Hey, glad you're here.",
+    sub:"No pressure — just a cosy little moment.",
+    footer:"🎧 earbuds in, world out 🐰"
+  },
+  dailyMoment:{
+    enabled:true,
+    title:"Start here",
+    sub:"a gentle little routine, step by step",
+    flow:["grounding","breathe","tasks","mood"],
+    // radical acceptance closing (method 10)
+    finished:"That's your moment for today 🌸 However today feels, you showed up — and that's enough."
+  },
+  moodEntry:{
+    enabled:true,
+    title:"How are you feeling?",
+    sub:"quick check-in, no pressure"
+  },
+  bringMeBack:{
+    enabled:true,
+    title:"Bring me back",
+    sub:"feeling far away? start here",
+    target:"quickground"
+  },
+  // home rows under "little practices" — order matters; only enabled show
+  order:["grounding","body","colour","countdown","look","breathe","tasks","name"],
+  activities:{
+
+    grounding:{
+      enabled:true,type:"sensory",
+      title:"5 · 4 · 3 · 2 · 1",blurb:"find your way back to now",
+      icon:"target",color:"#10b981",
+      finished:"You found your way back 🌿",
+      senses:[
+        {label:"things you can see",   count:5,icon:"eye",  prompt:"Look around — what's there?",              color:"#0ea5e9"},
+        {label:"sounds you can hear",  count:4,icon:"ear",  prompt:"Listen for a moment…",                     color:"#10b981"},
+        {label:"things you can touch", count:3,icon:"hand", prompt:"Reach out — what can you feel?",           color:"#8b5cf6"},
+        {label:"things you can smell", count:2,icon:"leaf", prompt:"Breathe in gently…",                       color:"#f59e0b"},
+        {label:"thing you can taste",  count:1,icon:"cup",  prompt:"One taste — or one thing that feels safe.",color:"#f43f5e"}
+      ]
+    },
+
+    quickground:{
+      enabled:true,type:"sensory",
+      title:"Quick reset",blurb:"",icon:"target",color:"#10b981",
+      finished:"You're back 🌿 Take it slow.",
+      senses:[
+        {label:"things you can see",  count:3,icon:"eye",  prompt:"Look around — tap 3 things.",               color:"#0ea5e9"},
+        {label:"sounds you can hear", count:2,icon:"ear",  prompt:"Tap 2 sounds you can hear.",                color:"#10b981"},
+        {label:"feet on the floor",   count:1,icon:"hand", prompt:"Press your feet down. Tap when you feel them.", color:"#8b5cf6"}
+      ]
+    },
+
+    // outward, eyes-open body grounding (FND-safe: proprioception, not internal organs)
+    body:{
+      enabled:true,type:"sequence",
+      title:"Settle your body",blurb:"gently, from the outside 🌿",
+      icon:"hand",color:"#14b8a6",
+      finished:"Your body's here, holding you 🌿",
+      steps:[
+        "Press both feet into the floor. Feel the ground hold you up.",
+        "Notice where your body rests on the chair or bed.",
+        "Roll your shoulders back, slow and easy.",
+        "Press your palms together — feel the warmth.",
+        "Wiggle your fingers and toes a little.",
+        "Sit or stand a little taller. Take up your space."
+      ]
+    },
+
+    colour:{
+      enabled:true,type:"colourHunt",
+      title:"Colour hunt",blurb:"spot colours around you 🎨",
+      icon:"circle",color:"#f472b6",target:3,
+      finished:"Nicely spotted 🎨 The world's still here with you.",
+      colours:[
+        {name:"pink",  hex:"#f9a8d4"},{name:"blue",  hex:"#60a5fa"},
+        {name:"green", hex:"#34d399"},{name:"yellow",hex:"#fbbf24"},
+        {name:"purple",hex:"#c084fc"},{name:"brown", hex:"#b08968"},
+        {name:"white", hex:"#f1f5f9"}
+      ]
+    },
+
+    countdown:{
+      enabled:true,type:"countdown",
+      title:"Count down",blurb:"a steady way to refocus 🔢",
+      icon:"minus",color:"#8b5cf6",start:100,step:7,
+      intro:"Count down from 100, taking away 7 each time. Say each number softly to yourself.",
+      finished:"Your mind came back to the room 💜"
+    },
+
+    look:{
+      enabled:true,type:"sequence",
+      title:"Look closely",blurb:"notice one small thing ✨",
+      icon:"search",color:"#c4956a",
+      finished:"You stayed with one tiny thing. That's it — that's the whole practice 🍂",
+      steps:[
+        "Is there something small nearby you could look at?",
+        "What colour is it?","What shape is it?",
+        "Is it smooth, or rough?","Is it warm, or cool?",
+        "Is it heavy, or light?",
+        "Say one true thing about it — out loud, just for you."
+      ]
+    },
+
+    breathe:{
+      enabled:true,type:"breathing",
+      title:"Breathe",blurb:"slow it down a little 🌬️",
+      icon:"ring",color:"#38bdf8",
+      note:"Eyes open — just rest them on the circle.",
+      finished:"Nice and slow 💙 You can always come back to this.",
+      pattern:[
+        {name:"Breathe in", sub:"slowly, through your nose",ms:4000,scale:1.0},
+        {name:"Hold",       sub:"gently",                   ms:2000,scale:1.0},
+        {name:"Breathe out",sub:"slow and long",            ms:6000,scale:0.55}
+      ]
+    },
+
+    tasks:{
+      enabled:true,type:"taskList",
+      title:"Little joys",blurb:"small good things 🌸",
+      icon:"leaf2",color:"#f472b6",
+      note:"Feel like any of these today? All good to skip too 💕",
+      doneText:"Done for now 🐰",
+      finished:"Even one small joy counts 🌸",
+      items:[
+        {emoji:"🐰",label:"Spend a moment with the bunny"},
+        {emoji:"☀️",label:"Step outside for a bit of sun"},
+        {emoji:"🚶",label:"A short gentle walk"},
+        {emoji:"🌱",label:"Notice one good thing today"}
+      ]
+    },
+
+    /* ─────────────────────────────────────────────────────────
+       DAILY ANCHORS (reminders) — a gentle, GROUPED checklist.
+       Ticks reset each new day. No history is kept.
+       Group 1 shows by default; groups with open:false sit behind
+       a "show more" tap.
+       ★ EDIT THESE ITEMS — change text, add/remove lines, or move an
+         item to another group by changing its "group" number. ★
+       ───────────────────────────────────────────────────────── */
+    reminders:{
+      enabled:true,type:"reminderList",
+      title:"Today's anchors",blurb:"gentle reminders 🌟",
+      icon:"star",color:"#f59e0b",
+      note:"Little things to hold onto today. Tap the ones that help — skipping is fine.",
+      doneText:"Done for now",
+      finished:"Held, for today 🌟",
+      groups:[
+        {name:"Hold onto today", open:true},   // group 0
+        {name:"When it's hard",  open:false},  // group 1
+        {name:"Little steps today", open:false}// group 2
+      ],
+      items:[
+        // group 0 — Hold onto today
+        {group:0,emoji:"🙏",label:"Right now, Jesus is here with me — and in my hardest moments, He was there too."},
+        {group:0,emoji:"💛",label:"Even if I can't feel it right now — I am loved. Remember one time I knew it (even from when I was little)."},
+        {group:0,emoji:"🫂",label:"People love me, and they're glad I'm here. I belong, and I'm not alone."},
+        {group:0,emoji:"🤗",label:"A hug with Mum — even a small one. Reach out when I'm ready.",pts:3},
+        {group:0,emoji:"🧸",label:"Hold Jesus close, and tell Him what's on my heart — He's right here."},
+        // group 1 — When it's hard
+        {group:1,emoji:"🌊",label:"Feeling it rise? Pause — I can say \"I'm not okay\" instead of letting it out on someone.",pts:3},
+        {group:1,emoji:"💬",label:"Reach out today — a word, a text, even an emoji. Asking is brave.",pts:3},
+        {group:1,emoji:"💔",label:"Just this one feeling today — I don't have to carry it all at once."},
+        // group 2 — Little steps today
+        {group:2,emoji:"🎯",label:"When my mind races — put it on what I'm doing right now. Do this one thing well."},
+        {group:2,emoji:"🧭",label:"Give my mind a job: what's one thing I'd like to do, learn, or look into today?"},
+        {group:2,emoji:"💪",label:"One brave thing today — even a tiny step counts as a win."},
+        {group:2,emoji:"📝",label:"Plan one small step — when will I do it? (even \"ask for help\" counts)"},
+        {group:2,emoji:"🏠",label:"If I've got a little energy — help out with one small thing at home.",pts:3},
+        {group:2,emoji:"📵",label:"A little screen-free time — put the phone down for a bit and just be. It'll still be here."},
+        {group:2,emoji:"🎮",label:"If I've got the energy — something I enjoy: a game, drums, a video to learn from. No pushing."},
+        {group:2,emoji:"🌱",label:"One day my heart for others will help people. For now, healing is enough — I don't have to be ready yet."}
+      ]
+    },
+
+    /* FLASHBACK — on-demand card (NOT a daily reminder, NOT in the Start here flow).
+       Grounds FIRST (present + safe), THEN offers the familiar faith comfort.
+       Never guides her into the memory itself. */
+    flashback:{
+      enabled:true,type:"sequence",
+      title:"When a memory pulls me back",
+      blurb:"come back to now, gently 🕊️",
+      icon:"anchor",color:"#0ea5e9",
+      finished:"You're here, in the present. It's over now — you're safe. 🕊️",
+      steps:[
+        "This is a memory. It is not happening now.",
+        "Look around — name 3 things you can see, right now.",
+        "Press your feet into the floor. Feel the ground holding you.",
+        "You are here, in the present. You are safe now.",
+        "Jesus is here with you, right now.",
+        "And in that hard moment — He was there too.",
+        "Breathe, slow and gentle. You made it through. It's over."
+      ]
+    },
+
+    /* ONE HARD THING — she writes it, saves it, and it's kept in her records */
+    hardthing:{
+      enabled:true,type:"hardThing",
+      title:"One hard thing",blurb:"something tough you did anyway 💪",
+      icon:"flag",color:"#8b5cf6",
+      prompt:"Did something hard today and stuck with it? Write it down — it counts.",
+      placeholder:"e.g. I went to class even though I felt awful",
+      saveText:"Save this 💜",
+      savedTitle:"That took real strength 💪",
+      savedSub:"Saved to your records. You can look back on these any time."
+    },
+
+    /* MY WINS — she ticks her own wins. Tick = star; untick = takes it back
+       (a correction, never a penalty). Reset daily. ★ EDIT ITEMS + pts freely. ★ */
+    mywins:{
+      enabled:true,type:"winList",
+      title:"Things I did",blurb:"tick your own wins ✅",
+      icon:"check",color:"#10b981",
+      note:"Anything you did today that you're glad about — tick it. Changed your mind, or tapped by mistake? Just untick. It's yours to manage.",
+      doneText:"Look at you 🌟",
+      finished:"Look at everything you did today 🌟",
+      items:[
+        {emoji:"🤗",label:"Gave Mum a hug",pts:3},
+        {emoji:"💬",label:"Reached out / asked for help",pts:3},
+        {emoji:"🏠",label:"Helped with something at home",pts:3},
+        {emoji:"📵",label:"Had a little screen-free time",pts:2},
+        {emoji:"🎯",label:"Put my mind on one thing",pts:2},
+        {emoji:"🎮",label:"Did something I enjoy",pts:1},
+        {emoji:"🙏",label:"Leaned on Jesus / talked to Him",pts:1},
+        {emoji:"🌟",label:"A win of my own (anything!)",pts:1}
+      ]
+    },
+
+    // kept off; every choice gives the same gentle reply, nothing stored
+    name:{
+      enabled:false,type:"nameIt",
+      title:"Name it",blurb:"just say what's here",
+      icon:"heart",color:"#fb7185",
+      prompt:"What's here right now? Just name it.",
+      words:["Okay","Calm","Tired","Anxious","Sad","Angry","Overwhelmed","Numb","Not sure"],
+      reply:"Thank you for noticing. Naming it is enough.",
+      replySub:"Nothing here is saved. Close whenever you like.",
+      privacyNote:"Nothing here is saved."
+    },
+
+    mood:{
+      enabled:true,type:"moodEntry",
+      title:"How are you feeling?",blurb:"quick check-in 💛",
+      icon:"heart",color:"#f59e0b"
+    }
+  },
+
+  /* ─────────────────────────────────────────────────────────
+     REWARDS (Phase 1) — gentle points. Only ever add; never
+     subtract, no streak, no "failed". A weekly GOAL (not a
+     requirement): do it → celebrate + go get your reward; don't
+     → stays quiet and resets next week.
+     ★ EDIT the point values / weekly goal here. ★
+     ───────────────────────────────────────────────────────── */
+  rewards:{
+    enabled:true,
+    title:"Rewards",
+    blurb:"your stars ⭐",
+    // points earned when an activity is COMPLETED (first time that day)
+    ptsByActivity:{ dailyMoment:2, grounding:2, quickground:2, body:2, colour:2,
+      countdown:2, look:2, breathe:2, flashback:2, tasks:1 },
+    hardThingPts:5,          // logging one hard thing
+    defaultAnchorPts:1,      // a reminder tick, unless the item sets its own pts
+    // weekly GOAL (encouragement, never punishment)
+    weeklyGoal:{
+      needHardThing:true,    // one 5-pt hard thing this week
+      needAnchor3:true,      // one caring step worth 3+ this week
+      totalPts:25,           // a reasonable weekly total
+      needBackup:true        // back up once this week
+    },
+    milestoneEvery:20,       // all-time stars per garden step (Phase 2)
+    weeklyRewardPrompt:"You did it this week! 🎉 Go and get your reward.",
+    weeklyPartial:"Some done this week 🌱 — every bit counts. No pressure."
+  },
+
+  /* ─────────────────────────────────────────────────────────
+     MY ROOM (Phase 2) — a cosy room that only ever fills up as
+     stars are earned. Items unlock at a star cost and stay forever
+     (based on your best-ever total, so corrections never empty it).
+     ★ EDIT items / costs / positions freely. Emoji = the decoration. ★
+     ───────────────────────────────────────────────────────── */
+  room:{
+    enabled:true,
+    title:"My room",
+    intro:"Every star adds something cosy. It only ever grows — nothing is ever lost. 🌿",
+    items:[
+      {id:"plant",  cost:5,   emoji:"🪴", x:274,y:186, label:"a little plant"},
+      {id:"couch",  cost:12,  emoji:"🛋️", x:112,y:190, label:"a comfy couch"},
+      {id:"lamp",   cost:20,  emoji:"💡", x:44, y:150, label:"a warm lamp"},
+      {id:"books",  cost:30,  emoji:"📚", x:250,y:150, label:"some books"},
+      {id:"picture",cost:42,  emoji:"🖼️", x:60, y:66,  label:"a picture"},
+      {id:"cat",    cost:55,  emoji:"🐈", x:168,y:205, label:"a cat friend"},
+      {id:"hplant", cost:70,  emoji:"🌿", x:288,y:78,  label:"a hanging plant"},
+      {id:"drum",   cost:86,  emoji:"🥁", x:62, y:200, label:"a drum"},
+      {id:"teddy",  cost:104, emoji:"🧸", x:132,y:206, label:"a teddy"},
+      {id:"candle", cost:124, emoji:"🕯️", x:212,y:192, label:"a candle"},
+      {id:"flowers",cost:146, emoji:"🌷", x:238,y:200, label:"fresh flowers"},
+      {id:"lights", cost:170, emoji:"✨", x:160,y:28,  label:"fairy lights"}
+    ],
+    gardenAt:190,
+    gardenTeaser:"🌱 Your room's looking lovely — a little garden is coming next…"
+  }
+};
+
+/* ════════════════════════════════════════════════════════════
+   ICONS
+   ════════════════════════════════════════════════════════════ */
+const I={
+  back:   s('<path d="M15 5l-7 7 7 7"/>'),
+  target: s('<circle cx="12" cy="12" r="3"/><circle cx="12" cy="12" r="7"/><circle cx="12" cy="12" r="11"/>'),
+  anchor: s('<circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="2.5" fill="currentColor" stroke="none"/>'),
+  eye:    s('<path d="M2 12s3.5-6.5 10-6.5S22 12 22 12s-3.5 6.5-10 6.5S2 12 2 12z"/><circle cx="12" cy="12" r="2.6"/>'),
+  ear:    s('<path d="M7 9a5 5 0 0 1 10 0c0 3-2.5 3.5-3.5 5S12 21 10 21a3 3 0 0 1-3-3"/><path d="M10.5 9a1.5 1.5 0 0 1 3 .3"/>'),
+  hand:   s('<path d="M8 13V6a1.5 1.5 0 0 1 3 0v5m0-1V5a1.5 1.5 0 0 1 3 0v6m0-1.5a1.5 1.5 0 0 1 3 0V15a6 6 0 0 1-6 6h-1a6 6 0 0 1-5.2-3l-1.6-3a1.5 1.5 0 0 1 2.6-1.5L8 14"/>'),
+  leaf:   s('<path d="M5 19c0-8 6-13 14-13 0 8-6 13-14 13z"/><path d="M5 19c4-1 7-3 9-6"/>'),
+  leaf2:  s('<path d="M5 19c0-8 6-13 14-13 0 8-6 13-14 13z"/><path d="M5 19c4-1 7-3 9-6"/>'),
+  cup:    s('<path d="M5 8h12v4a5 5 0 0 1-5 5H10a5 5 0 0 1-5-5z"/><path d="M17 9h2a2 2 0 0 1 0 4h-2"/><path d="M7 4v2M10 4v2M13 4v2"/>'),
+  circle: s('<circle cx="12" cy="12" r="8"/>'),
+  ring:   s('<circle cx="12" cy="12" r="8.5"/>'),
+  minus:  s('<circle cx="12" cy="12" r="9"/><path d="M8 12h8"/>'),
+  search: s('<circle cx="11" cy="11" r="6"/><path d="M15.5 15.5L20 20"/>'),
+  heart:  s('<path d="M12 20s-7-4.6-7-10a4 4 0 0 1 7-2.5A4 4 0 0 1 19 10c0 5.4-7 10-7 10z"/>'),
+  star:   s('<path d="M12 3.5l2.6 5.3 5.8.8-4.2 4.1 1 5.8-5.2-2.7-5.2 2.7 1-5.8L3.4 9.6l5.8-.8z"/>'),
+  flag:   s('<path d="M5 21V4M5 4h11l-1.6 3L16 10H5"/>'),
+  check:  s('<path d="M5 12.5l4.2 4.2L19 7"/>'),
+  play:   s('<path d="M8 5.5v13l10-6.5z" fill="currentColor" stroke="none"/>'),
+  pause:  s('<path d="M9 5v14M15 5v14"/>'),
+  chart:  s('<polyline points="4 17 9 12 13 16 20 7"/><path d="M4 20h16"/>'),
+  cal:    s('<rect x="4" y="5" width="16" height="16" rx="2"/><path d="M4 9h16M8 3v4M16 3v4"/>'),
+  save:   s('<path d="M5 4h11l3 3v13H5z"/><path d="M8 4v5h7"/><path d="M8 20v-6h8v6"/>'),
+  upload: s('<path d="M12 15V3m0 0l-4 4m4-4l4 4"/><path d="M4 15v4a1 1 0 0 0 1 1h14a1 1 0 0 0 1-1v-4"/>'),
+  gear:   s('<circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3M5 5l2 2M17 17l2 2M19 5l-2 2M7 17l-2 2"/>'),
+  grid:   s('<rect x="4" y="4" width="7" height="7" rx="1.5"/><rect x="13" y="4" width="7" height="7" rx="1.5"/><rect x="4" y="13" width="7" height="7" rx="1.5"/><rect x="13" y="13" width="7" height="7" rx="1.5"/>'),
+  close:  s('<path d="M6 6l12 12M18 6L6 18"/>'),
+  trash:  s('<path d="M3 6h18M8 6V4h8v2M19 6l-1 14H6L5 6"/>'),
+  doc:    s('<path d="M6 3h9l4 4v14H6z"/><path d="M15 3v4h4"/><path d="M9 13h6M9 17h6"/>'),
+};
+function s(inner){return '<svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">'+inner+'</svg>';}
+
+/* ════════════════════════════════════════════════════════════
+   HELPERS
+   ════════════════════════════════════════════════════════════ */
+function esc(t){return String(t).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
+function icsEsc(t){return String(t).replace(/\\/g,'\\\\').replace(/;/g,'\\;').replace(/,/g,'\\,').replace(/\r?\n/g,'\\n');}
+function icsUnesc(t){return String(t).replace(/\\n/gi,'\n').replace(/\\,/g,',').replace(/\\;/g,';').replace(/\\\\/g,'\\');}
+function scoreColor(n){
+  if(n>=3)return '#10b981';
+  if(n>=1)return '#34d399';
+  if(n===0)return '#94a3b8';
+  if(n>=-2)return '#f59e0b';
+  return '#fb7185';
+}
+function dateKey(d){d=d?new Date(d):new Date();return d.getFullYear()+'-'+(d.getMonth()+1)+'-'+d.getDate();}
+function download(content,filename,type){
+  try{
+    const blob=new Blob([content],{type:type});
+    const a=document.createElement('a');a.href=URL.createObjectURL(blob);
+    a.download=filename;a.click();
+  }catch(e){alert('Sorry, that could not be downloaded on this device.');}
+}
+function fmtDateTime(ts){
+  const d=new Date(ts);
+  return d.toLocaleDateString('en-NZ',{month:'short',day:'numeric'})+' '+
+         d.toLocaleTimeString('en-NZ',{hour:'2-digit',minute:'2-digit'});
+}
+
+/* ════════════════════════════════════════════════════════════
+   STORAGE  (localStorage — this device only)
+   ════════════════════════════════════════════════════════════ */
+const K_MOOD='cc_mood', K_HARD='cc_hard', K_REM='cc_rem', K_PTS='cc_pts', K_WINS='cc_wins', K_PEAK='cc_peak';
+function lsGet(k,f){try{return JSON.parse(localStorage.getItem(k)||f);}catch{return JSON.parse(f);}}
+function lsSet(k,v){try{localStorage.setItem(k,JSON.stringify(v));}catch{}}
+
+function loadMoods(){return lsGet(K_MOOD,'[]');}
+function saveMoods(a){lsSet(K_MOOD,a);}
+function addMood(score,note){const a=loadMoods();a.push({ts:Date.now(),score:score,note:note||''});saveMoods(a);}
+
+function loadHard(){return lsGet(K_HARD,'[]');}
+function saveHard(a){lsSet(K_HARD,a);}
+function addHard(text){const ts=Date.now();const a=loadHard();a.push({ts:ts,text:text||''});saveHard(a);return ts;}
+
+function loadRem(){return lsGet(K_REM,'{}');}
+function saveRem(o){lsSet(K_REM,o);}
+function todayRem(){
+  const today=dateKey();let o=loadRem();
+  if(o.date!==today){o={date:today,done:{}};saveRem(o);}
+  if(!o.done)o.done={};
+  return o;
+}
+
+function clearAllData(){saveMoods([]);saveHard([]);saveRem({});savePts([]);saveWins({});savePeak(0);}
+
+/* ── peak stars: best-ever total. Only rises. Drives the room so
+   corrections (which lower current stars) never remove room items. ── */
+function loadPeak(){const v=Number(localStorage.getItem(K_PEAK));return isNaN(v)?0:v;}
+function savePeak(n){try{localStorage.setItem(K_PEAK,String(n));}catch{}}
+function updatePeak(){const pk=Math.max(loadPeak(),ptsAllTime());savePeak(pk);return pk;}
+
+/* ── My wins (self-check) — today's ticks, reset daily ── */
+function loadWins(){return lsGet(K_WINS,'{}');}
+function saveWins(o){lsSet(K_WINS,o);}
+function todayWins(){const t=dateKey();let o=loadWins();if(o.date!==t){o={date:t,done:{}};saveWins(o);}if(!o.done)o.done={};return o;}
+
+/* ── points ledger (Phase 1 rewards) ── */
+function loadPts(){return lsGet(K_PTS,'[]');}
+function savePts(a){lsSet(K_PTS,a);}
+// remove a ledger entry by key — a correction, not a penalty
+function revokePts(key){if(!key)return;savePts(loadPts().filter(e=>e.key!==key));}
+function weekKey(d){
+  d=d?new Date(d):new Date();
+  const dow=(d.getDay()+6)%7;               // Monday = 0
+  const mon=new Date(d.getFullYear(),d.getMonth(),d.getDate()-dow);
+  return dateKey(mon);
+}
+// award points; key de-dupes (returns pts actually added)
+function awardPts(source,pts,key){
+  if(!CONFIG.rewards||!CONFIG.rewards.enabled)return 0;
+  const log=loadPts();
+  if(key&&log.some(e=>e.key===key))return 0;
+  log.push({ts:Date.now(),source:source,pts:pts||0,key:key||''});
+  savePts(log);
+  updatePeak();
+  return pts||0;
+}
+function ptsToday(){const t=dateKey();return loadPts().filter(e=>dateKey(e.ts)===t).reduce((s,e)=>s+(e.pts||0),0);}
+function weekEvents(){const w=weekKey();return loadPts().filter(e=>weekKey(e.ts)===w);}
+function ptsThisWeek(){return weekEvents().reduce((s,e)=>s+(e.pts||0),0);}
+function ptsAllTime(){return loadPts().reduce((s,e)=>s+(e.pts||0),0);}
+function weeklyStatus(){
+  const g=(CONFIG.rewards&&CONFIG.rewards.weeklyGoal)||{};
+  const ev=weekEvents();
+  const hard=ev.some(e=>e.source==='hard');
+  const anchor3=ev.some(e=>(e.source==='anchor'||e.source==='win')&&(e.pts||0)>=3);
+  const total=ev.reduce((s,e)=>s+(e.pts||0),0);
+  const backup=ev.some(e=>e.source==='backup');
+  const totalOk=!g.totalPts||total>=g.totalPts;
+  const done=(!g.needHardThing||hard)&&(!g.needAnchor3||anchor3)&&totalOk&&(!g.needBackup||backup);
+  return {hard,anchor3,total,totalOk,backup,done};
+}
+// award for finishing an activity (once per activity per day)
+function awardActivity(id){
+  const map=(CONFIG.rewards&&CONFIG.rewards.ptsByActivity)||{};
+  const pts=map[id];
+  if(pts==null)return;
+  awardPts('activity',pts,'act:'+dateKey()+':'+id);
+}
+function mergePts(incoming){
+  if(!Array.isArray(incoming))return 0;
+  const cur=loadPts();
+  const seenKey=new Set(cur.filter(e=>e.key).map(e=>e.key));
+  const seenTs=new Set(cur.map(e=>e.ts));
+  let n=0;
+  incoming.forEach(e=>{
+    if(!e||typeof e.pts!=='number')return;
+    if(e.key&&seenKey.has(e.key))return;
+    if(!e.key&&seenTs.has(e.ts))return;
+    cur.push({ts:e.ts,source:e.source||'',pts:e.pts,key:e.key||''});
+    if(e.key)seenKey.add(e.key); seenTs.add(e.ts); n++;
+  });
+  savePts(cur);return n;
+}
+
+/* merge helpers — dedupe by timestamp; returns count added */
+function mergeMoods(incoming){
+  if(!Array.isArray(incoming))return 0;
+  const cur=loadMoods(),seen=new Set(cur.map(m=>m.ts));let n=0;
+  incoming.forEach(m=>{
+    if(m&&typeof m.ts==='number'&&typeof m.score==='number'&&!seen.has(m.ts)){
+      cur.push({ts:m.ts,score:m.score,note:m.note||''});seen.add(m.ts);n++;
+    }
+  });
+  cur.sort((a,b)=>a.ts-b.ts);saveMoods(cur);return n;
+}
+function mergeHard(incoming){
+  if(!Array.isArray(incoming))return 0;
+  const cur=loadHard(),seen=new Set(cur.map(h=>h.ts));let n=0;
+  incoming.forEach(h=>{
+    if(h&&typeof h.ts==='number'&&!seen.has(h.ts)){
+      cur.push({ts:h.ts,text:h.text||''});seen.add(h.ts);n++;
+    }
+  });
+  cur.sort((a,b)=>a.ts-b.ts);saveHard(cur);return n;
+}
+
+/* ════════════════════════════════════════════════════════════
+   EXPORT  —  .ics (mood → calendar)  &  .json (full backup)
+   ════════════════════════════════════════════════════════════ */
+function exportICS(){
+  const arr=loadMoods();
+  if(!arr.length){alert('No mood records yet 🌸');return;}
+  const fmt=ts=>{const d=new Date(ts);return d.toISOString().replace(/[-:]/g,'').split('.')[0]+'Z';};
+  const lines=['BEGIN:VCALENDAR','VERSION:2.0','PRODID:-//Calm Corner//EN','CALSCALE:GREGORIAN'];
+  arr.forEach(m=>{
+    const label=m.score>0?'+'+m.score:String(m.score);
+    lines.push('BEGIN:VEVENT','UID:cc-'+m.ts+'@calmcorner',
+      'DTSTART:'+fmt(m.ts),'DTEND:'+fmt(m.ts+300000),
+      'SUMMARY:Mood '+label,'DESCRIPTION:'+(m.note?icsEsc(m.note):''),'END:VEVENT');
+  });
+  lines.push('END:VCALENDAR');
+  download(lines.join('\r\n'),'calm-corner-mood.ics','text/calendar');
+}
+
+function exportBackup(){
+  const data={app:'calmnext',version:3,exportedAt:Date.now(),
+    mood:loadMoods(),hard:loadHard(),pts:loadPts(),peak:loadPeak()};
+  const stamp=new Date().toISOString().slice(0,10);
+  download(JSON.stringify(data,null,2),'calm-corner-backup-'+stamp+'.json','application/json');
+  awardPts('backup',0,'backup:'+weekKey());   // marks the weekly backup goal
+}
+
+/* human-readable spreadsheet — opens in Excel / Google Sheets, printable */
+function csvCell(v){return '"'+String(v).replace(/"/g,'""')+'"';}
+function csvDateTime(ts){
+  const d=new Date(ts);
+  const p=n=>String(n).padStart(2,'0');
+  return [d.getFullYear()+'-'+p(d.getMonth()+1)+'-'+p(d.getDate()), p(d.getHours())+':'+p(d.getMinutes())];
+}
+function exportCSV(){
+  const moods=loadMoods(),hard=loadHard();
+  if(!moods.length&&!hard.length){alert('No records yet 🌸');return;}
+  const today=csvDateTime(Date.now())[0];
+  const lines=[];
+  lines.push('Calm Corner records — exported '+today);
+  lines.push('');
+  lines.push('Mood check-ins');
+  lines.push(['Date','Time','Score','Note'].map(csvCell).join(','));
+  moods.slice().sort((a,b)=>a.ts-b.ts).forEach(m=>{
+    const dt=csvDateTime(m.ts);
+    lines.push([dt[0],dt[1],(m.score>0?'+'+m.score:String(m.score)),m.note||''].map(csvCell).join(','));
+  });
+  lines.push('');
+  lines.push('Hard things done');
+  lines.push(['Date','Time','What I did'].map(csvCell).join(','));
+  hard.slice().sort((a,b)=>a.ts-b.ts).forEach(h=>{
+    const dt=csvDateTime(h.ts);
+    lines.push([dt[0],dt[1],h.text||''].map(csvCell).join(','));
+  });
+  // BOM helps Excel read UTF-8 (emoji, accents) correctly
+  download('\uFEFF'+lines.join('\r\n'),'calm-corner-records-'+today+'.csv','text/csv;charset=utf-8');
+}
+
+/* ════════════════════════════════════════════════════════════
+   IMPORT  —  accepts old app's .ics (mood) OR .json backup (all)
+   ════════════════════════════════════════════════════════════ */
+function parseICSDate(v){
+  const m=String(v).match(/(\d{4})(\d{2})(\d{2})T(\d{2})(\d{2})(\d{2})(Z?)/);
+  if(!m)return null;
+  if(m[7]==='Z')return Date.UTC(+m[1],+m[2]-1,+m[3],+m[4],+m[5],+m[6]);
+  return new Date(+m[1],+m[2]-1,+m[3],+m[4],+m[5],+m[6]).getTime();
+}
+function parseICS(text){
+  const unfolded=String(text).replace(/\r\n/g,'\n').replace(/\n[ \t]/g,'');
+  const lines=unfolded.split('\n');
+  const events=[];let cur=null;
+  lines.forEach(line=>{
+    if(line==='BEGIN:VEVENT')cur={};
+    else if(line==='END:VEVENT'){if(cur)events.push(cur);cur=null;}
+    else if(cur){const i=line.indexOf(':');if(i>0){const key=line.slice(0,i).split(';')[0];cur[key]=line.slice(i+1);}}
+  });
+  const moods=[];
+  events.forEach(e=>{
+    if(!e.DTSTART||!e.SUMMARY)return;
+    const mm=e.SUMMARY.match(/(-?\+?\d+)/);
+    const ts=parseICSDate(e.DTSTART);
+    if(!mm||ts==null)return;
+    moods.push({ts:ts,score:parseInt(mm[1],10),note:e.DESCRIPTION?icsUnesc(e.DESCRIPTION):''});
+  });
+  return moods;
+}
+function importText(text,filename){
+  const t=String(text).trim();
+  const looksJson=(filename&&/\.json$/i.test(filename))||t.charAt(0)==='{';
+  if(looksJson){
+    let obj;try{obj=JSON.parse(t);}catch{throw new Error('json');}
+    const mAdded=mergeMoods(obj.mood);
+    const hAdded=mergeHard(obj.hard);
+    mergePts(obj.pts);
+    savePeak(Math.max(loadPeak(),Number(obj.peak)||0));
+    updatePeak();
+    return {kind:'backup',mAdded:mAdded,hAdded:hAdded};
+  }
+  if(t.indexOf('BEGIN:VCALENDAR')>=0||t.indexOf('BEGIN:VEVENT')>=0){
+    const mAdded=mergeMoods(parseICS(t));
+    return {kind:'ics',mAdded:mAdded,hAdded:0};
+  }
+  throw new Error('format');
+}
+function handleImportFile(file){
+  if(!file)return;
+  const reader=new FileReader();
+  reader.onload=function(e){
+    try{
+      const r=importText(e.target.result,file.name);
+      if(r.kind==='backup')
+        alert('Imported from backup 🌸\n'+r.mAdded+' mood record(s) + '+r.hAdded+' hard-thing record(s).');
+      else
+        alert('Imported from calendar file 🌸\n'+r.mAdded+' mood record(s) added.');
+    }catch(err){
+      alert("Sorry — that file couldn't be read. Please choose a .ics file (from the old app) or a .json backup.");
+    }
+    go('data');
+  };
+  reader.onerror=function(){alert('Sorry, that file could not be opened.');};
+  reader.readAsText(file);
+}
+
+/* ════════════════════════════════════════════════════════════
+   ENGINE STATE
+   ════════════════════════════════════════════════════════════ */
+const app=document.getElementById('app');
+let timers=[];
+const ST={view:'home',id:null,a:{},flow:null};
+
+function clrT(){timers.forEach(clearTimeout);timers=[];}
+function go(v){clrT();ST.view=v;draw();}
+function openAct(id){const d=CONFIG.activities[id];if(!d)return;ST.id=id;ST.a=reset(d);go('activity');}
+function goHome(){ST.flow=null;ST.id=null;go('home');}
+
+function finish(){ if(ST.flow) return advFlow(); if(ST.id)awardActivity(ST.id); ST.a={_finished:true}; go('finished'); }
+function skipStep(){ if(ST.flow) return advFlow(); goHome(); }
+
+function reset(d){
+  switch(d.type){
+    case 'sensory':    return{si:0,tapped:0,locked:false};
+    case 'sequence':   return{i:0};
+    case 'colourHunt': return{ci:rndCI(d),count:0};
+    case 'countdown':  return{current:d.start,started:false};
+    case 'breathing':  return{running:false,pi:0};
+    case 'taskList':   return{done:{}};
+    case 'reminderList':return{expanded:{}};
+    case 'winList':    return{};
+    case 'hardThing':  return{text:'',saved:false};
+    case 'moodEntry':  return{score:null,note:''};
+    case 'nameIt':     return{picked:null};
+    default:           return{};
+  }
+}
+function rndCI(d){return Math.floor(Math.random()*d.colours.length);}
+
+/* flow */
+function startFlow(){
+  const dm=CONFIG.dailyMoment;
+  if(!dm||!dm.flow||!dm.flow.length)return;
+  ST.flow={ids:dm.flow.filter(id=>CONFIG.activities[id]&&CONFIG.activities[id].enabled),idx:0};
+  openFlowStep();
+}
+function openFlowStep(){
+  const id=ST.flow.ids[ST.flow.idx];const d=CONFIG.activities[id];
+  if(!d)return advFlow();
+  ST.id=id;ST.a=reset(d);go('activity');
+}
+function advFlow(){
+  ST.flow.idx++;
+  if(ST.flow.idx<ST.flow.ids.length)openFlowStep();
+  else{ST.flow=null;awardActivity('dailyMoment');go('flowdone');}
+}
+
+/* ════════════════════════════════════════════════════════════
+   DRAW
+   ════════════════════════════════════════════════════════════ */
+function draw(){
+  const views={
+    home:renderHome,finished:renderFinished,flowdone:renderFlowDone,
+    history:renderHistory,hardhistory:renderHardHistory,data:renderData,
+    struggling:renderStruggling,more:renderMore,rewards:renderRewards,activity:renderActivity
+  };
+  app.innerHTML=(views[ST.view]||renderHome)();
+  bind();
+  if(ST.view==='history')drawChart(ST.histSeg||'week');
+  if(ST.view==='activity'&&CONFIG.activities[ST.id]&&CONFIG.activities[ST.id].type==='breathing')bindBreath();
+}
+
+/* ════════════════════════════════════════════════════════════
+   HOME
+   ════════════════════════════════════════════════════════════ */
+function rowFor(id){
+  const d=CONFIG.activities[id];
+  if(!d||!d.enabled)return'';
+  return `<button class="row" data-open="${id}">
+    <span class="chip" style="background:${d.color}22;color:${d.color}">${I[d.icon]||I.circle}</span>
+    <span><b>${d.title}</b>${d.blurb?'<span>'+d.blurb+'</span>':''}</span>
+  </button>`;
+}
+function renderHome(){
+  const p=CONFIG.personalization,h=CONFIG.home;
+  const greet=p.name?'Hi, '+p.name+' ✨':'Hey you ✨';
+  const A=CONFIG.activities;
+
+  const start=CONFIG.dailyMoment.enabled?`
+    <button class="anchor start" data-flow>
+      <span class="chip">${I.play}</span>
+      <span><b>${CONFIG.dailyMoment.title}</b><span>${CONFIG.dailyMoment.sub}</span></span>
+    </button>`:'';
+  const moodBtn=CONFIG.moodEntry.enabled?`
+    <button class="anchor mood-entry" data-open="mood">
+      <span class="chip">${I.heart}</span>
+      <span><b>${CONFIG.moodEntry.title}</b><span>${CONFIG.moodEntry.sub}</span></span>
+    </button>`:'';
+  const struggle=`
+    <button class="anchor bmb" data-struggling>
+      <span class="chip">${I.anchor}</span>
+      <span><b>When I'm struggling</b><span>feeling far away, or pulled back? 🕊️</span></span>
+    </button>`;
+  const rewards=(CONFIG.rewards&&CONFIG.rewards.enabled)?`
+    <button class="anchor reward" data-rewards>
+      <span class="chip">${I.star}</span>
+      <span><b>${(CONFIG.room&&CONFIG.room.enabled)?CONFIG.room.title:CONFIG.rewards.title}</b><span>today ⭐ ${ptsToday()} · this week ⭐ ${ptsThisWeek()}</span></span>
+    </button>`:'';
+  const more=`
+    <button class="anchor more" data-more>
+      <span class="chip">${I.grid}</span>
+      <span><b>More</b><span>all the little practices &amp; your records</span></span>
+    </button>`;
+
+  return `<div class="home fade">
+    <div class="eyebrow"><span class="dot">${I.leaf}</span>${h.eyebrow}</div>
+    <h1 class="greet">${greet}<br>${h.line}</h1>
+    <p class="sub">${h.sub}</p>
+    ${start}${moodBtn}${struggle}${rewards}${more}
+    <p class="foot">${h.footer}</p>
+  </div>`;
+}
+
+/* ── When I'm struggling — a small chooser of hard-moment tools ── */
+function renderStruggling(){
+  const A=CONFIG.activities;
+  const opt=(id,cls)=>{
+    const d=A[id];if(!d||!d.enabled)return'';
+    return `<button class="row" data-open="${id}">
+      <span class="chip" style="background:${d.color}22;color:${d.color}">${I[d.icon]||I.anchor}</span>
+      <span><b>${id==='quickground'?'Quick reset':d.title}</b><span>${id==='quickground'?'a 30-second way back':d.blurb}</span></span>
+    </button>`;
+  };
+  return `<div class="bar">
+    <button class="iconbtn" data-home>${I.back}</button><span class="bar-title">When I'm struggling</span>
+  </div>
+  <div class="pane fade" style="justify-content:flex-start;padding-top:18px;gap:12px">
+    <p class="hint" style="max-width:none">You're not alone. Pick whatever fits right now — or just breathe.</p>
+    <div class="list" style="width:100%">
+      ${opt('quickground')}
+      ${opt('flashback')}
+      ${opt('grounding')}
+      ${opt('breathe')}
+    </div>
+  </div>`;
+}
+
+/* ── More — everything else, tucked away ── */
+function renderMore(){
+  const A=CONFIG.activities;
+  const skip={mood:1,reminders:1,hardthing:1,quickground:1,flashback:1};
+  const practices=CONFIG.order.filter(id=>A[id]&&A[id].enabled&&!skip[id]).map(rowFor).join('');
+  const dayRows=[
+    (A.mywins&&A.mywins.enabled)?rowFor('mywins'):'',
+    (A.reminders&&A.reminders.enabled)?rowFor('reminders'):'',
+    (A.hardthing&&A.hardthing.enabled)?rowFor('hardthing'):''
+  ].join('');
+  const recRows=`
+    <button class="row" data-hist>
+      <span class="chip" style="background:#f59e0b22;color:#f59e0b">${I.chart}</span>
+      <span><b>Mood history</b><span>see how you've been feeling 📈</span></span>
+    </button>
+    <button class="row" data-hardhist>
+      <span class="chip" style="background:#8b5cf622;color:#8b5cf6">${I.flag}</span>
+      <span><b>Hard things you've done</b><span>look back at your courage 💪</span></span>
+    </button>
+    <button class="row" data-datascreen>
+      <span class="chip" style="background:#64748b22;color:#64748b">${I.gear}</span>
+      <span><b>Backup &amp; data</b><span>save, restore, or bring old records 💾</span></span>
+    </button>`;
+  return `<div class="bar">
+    <button class="iconbtn" data-home>${I.back}</button><span class="bar-title">More</span>
+  </div>
+  <div class="pane fade" style="justify-content:flex-start;padding-top:8px;gap:0">
+    <div class="picklabel">today</div>
+    <div class="list" style="width:100%">${dayRows}</div>
+    <div class="picklabel">little practices</div>
+    <div class="list" style="width:100%">${practices}</div>
+    <div class="picklabel">your records</div>
+    <div class="list" style="width:100%">${recRows}</div>
+  </div>`;
+}
+
+/* ── My room (Phase 2) — cosy scene that fills up with earned stars ── */
+function renderRoomScene(peak){
+  const r=CONFIG.room;
+  if(!r||!r.enabled)return'';
+  const items=r.items.filter(it=>peak>=it.cost)
+    .map(it=>`<text x="${it.x}" y="${it.y}" font-size="26" text-anchor="middle" dominant-baseline="middle">${it.emoji}</text>`).join('');
+  return `<svg viewBox="0 0 320 240" width="100%" style="display:block;border-radius:16px" role="img" aria-label="My cosy room">
+    <defs>
+      <linearGradient id="wall" x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0" stop-color="#fdf2f8"/><stop offset="1" stop-color="#f5edff"/>
+      </linearGradient>
+      <linearGradient id="sky" x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0" stop-color="#bae6fd"/><stop offset="1" stop-color="#e0f2fe"/>
+      </linearGradient>
+    </defs>
+    <rect x="0" y="0" width="320" height="168" fill="url(#wall)"/>
+    <rect x="0" y="168" width="320" height="72" fill="#f0d9b5"/>
+    <rect x="0" y="164" width="320" height="6" fill="#e7c9a0"/>
+    <rect x="120" y="40" width="80" height="70" rx="6" fill="#e7c9a0"/>
+    <rect x="126" y="46" width="68" height="58" rx="4" fill="url(#sky)"/>
+    <circle cx="176" cy="62" r="8" fill="#fde68a" opacity=".9"/>
+    <path d="M132 96 q10 -14 20 0 q10 -12 20 0 l0 8 l-40 0 z" fill="#bbf7d0"/>
+    <line x1="160" y1="46" x2="160" y2="104" stroke="#e7c9a0" stroke-width="3"/>
+    <line x1="126" y1="75" x2="194" y2="75" stroke="#e7c9a0" stroke-width="3"/>
+    ${items}
+  </svg>`;
+}
+
+/* ── Rewards / My room — room scene + gentle stars + weekly goal ── */
+function renderRewards(){
+  const r=CONFIG.rewards, room=CONFIG.room;
+  const w=weeklyStatus();
+  const g=r.weeklyGoal||{};
+  const chk=(done,label)=>`
+    <div class="goal-row ${done?'on':''}">
+      <span class="goal-box">${done?I.check:''}</span>
+      <span class="goal-label">${label}</span>
+    </div>`;
+  const goals=[
+    g.needHardThing?chk(w.hard,"Do one brave, hard thing 💪"):'',
+    g.needAnchor3?chk(w.anchor3,"One caring step (reach out, a hug, help at home) 🤍"):'',
+    g.totalPts?chk(w.totalOk,"Collect "+g.totalPts+" stars this week ("+Math.min(w.total,g.totalPts)+"/"+g.totalPts+") ⭐"):'',
+    g.needBackup?chk(w.backup,"Back up your data once 💾"):''
+  ].join('');
+  const banner=w.done
+    ? `<div class="reward-win">🎉<div>${esc(r.weeklyRewardPrompt)}</div></div>`
+    : `<div class="reward-soft">${esc(r.weeklyPartial)}</div>`;
+
+  // room + next unlock
+  const peak=updatePeak();
+  let roomBlock='';
+  if(room&&room.enabled){
+    const next=room.items.filter(it=>peak<it.cost).sort((a,b)=>a.cost-b.cost)[0];
+    const gardenReady=peak>=(room.gardenAt||1e9);
+    const caption=gardenReady
+      ? esc(room.gardenTeaser)
+      : (next?('Next: '+next.emoji+' '+esc(next.label)+' at '+next.cost+' stars — '+(next.cost-peak)+' to go'):'Your room is full — lovely! 🌸');
+    roomBlock=`
+      <div class="room-wrap">${renderRoomScene(peak)}</div>
+      <div class="room-cap">${caption}</div>`;
+  }
+
+  return `<div class="bar">
+    <button class="iconbtn" data-home>${I.back}</button><span class="bar-title">${room&&room.enabled?room.title:r.title}</span>
+  </div>
+  <div class="pane fade" style="justify-content:flex-start;padding-top:14px;gap:16px">
+    ${roomBlock}
+    <div class="stars-today">
+      <div class="st-num">⭐ ${ptsToday()}</div>
+      <div class="st-cap">stars today · ⭐ ${ptsThisWeek()} this week · 🌟 ${ptsAllTime()} all-time</div>
+    </div>
+    ${(CONFIG.activities.mywins&&CONFIG.activities.mywins.enabled)?`<button class="btn" data-open="mywins" style="background:#10b981">✅ Tick today's wins</button>`:''}
+    <div class="goal-card">
+      <div class="goal-title">This week's little goal</div>
+      ${goals}
+      ${banner}
+    </div>
+    <p class="hint" style="max-width:none">No streaks, no pressure. Miss a day and nothing is lost — your room keeps everything it's grown. 💛</p>
+  </div>`;
+}
+
+/* ════════════════════════════════════════════════════════════
+   SHELL
+   ════════════════════════════════════════════════════════════ */
+function shell(title,inner){
+  const flowLabel=ST.flow?`<span style="font-size:11px;color:var(--ink-faint);margin-left:auto">${ST.flow.idx+1}/${ST.flow.ids.length}</span>`:'';
+  return `<div class="bar">
+    <button class="iconbtn" data-home aria-label="Back">${I.back}</button>
+    <span class="bar-title">${title}</span>${flowLabel}
+  </div>
+  <div class="pane fade">${inner}</div>`;
+}
+
+/* ════════════════════════════════════════════════════════════
+   ACTIVITY DISPATCH
+   ════════════════════════════════════════════════════════════ */
+function renderActivity(){
+  const d=CONFIG.activities[ST.id];
+  const fn={sensory:rSensory,sequence:rSequence,colourHunt:rColour,countdown:rCountdown,
+    breathing:rBreathe,taskList:rTasks,reminderList:rReminders,winList:rMyWins,hardThing:rHardThing,
+    moodEntry:rMoodEntry,nameIt:rNameIt}[d.type];
+  return shell(d.title,fn?fn(d):'');
+}
+
+/* ── Sensory ── */
+function rSensory(d){
+  const a=ST.a,s=d.senses[a.si];
+  const dots=d.senses.map((_,k)=>`<i style="background:${k<a.si?'#94a3b8':k===a.si?s.color:'var(--ink-faint)'}"></i>`).join('');
+  return `<div class="gap">
+    <div class="dots">${dots}</div>
+    <div style="display:flex;flex-direction:column;align-items:center;gap:5px">
+      <span class="count">${s.count-a.tapped}</span><span class="lead">${s.label}</span>
+    </div>
+    <p class="hint">${s.prompt}</p>
+    <button class="tap" data-tap style="background:${s.color}">
+      ${I[s.icon]||I.target}<small>tap when you notice one</small></button>
+  </div>`;
+}
+
+/* ── Sequence ── */
+function rSequence(d){
+  const a=ST.a,last=a.i===d.steps.length-1;
+  const dots=d.steps.map((_,k)=>`<i style="background:${k<=a.i?d.color:'var(--ink-faint)'}"></i>`).join('');
+  return `<div class="gap">
+    <div class="dots">${dots}</div>
+    <p class="big">${d.steps[a.i]}</p>
+    <button class="btn" data-next style="background:${d.color}">${last?'Done':'Next'}</button>
+  </div>`;
+}
+
+/* ── Colour Hunt ── */
+function rColour(d){
+  const a=ST.a,c=d.colours[a.ci],reached=a.count>=d.target;
+  const pips=Array.from({length:d.target}).map((_,k)=>`<i style="width:13px;height:13px;background:${k<a.count?c.hex:'var(--ink-faint)'}"></i>`).join('');
+  const action=reached?`<div class="stack">
+    <p class="lead">Nicely spotted 🎨</p>
+    <button class="btn-soft" data-newcolour>Find another colour</button>
+    <button class="btn" data-finish style="background:${d.color}">I'm done</button>
+  </div>`:`<button class="btn" data-found style="background:${c.hex}">I found one</button>`;
+  return `<div class="gap">
+    <p class="lead">Find ${d.target} things that are</p>
+    <div style="width:108px;height:108px;border-radius:50%;display:flex;align-items:center;justify-content:center;background:${c.hex};box-shadow:0 0 36px ${c.hex}66;border:1px solid var(--line)">
+      <span style="font-size:20px;font-weight:700;color:#1e293b;opacity:.75;text-transform:capitalize">${c.name}</span>
+    </div>
+    <div class="dots">${pips}</div>
+    ${action}
+  </div>`;
+}
+
+/* ── Countdown ── */
+function rCountdown(d){
+  const a=ST.a;
+  if(!a.started)return `<div class="gap"><p class="lead">${d.intro}</p>
+    <button class="btn" data-cdstart style="background:${d.color}">Start at ${d.start}</button></div>`;
+  const next=a.current-d.step,ending=next<0;
+  return `<div class="gap">
+    <span class="count">${a.current}</span><p class="hint">take away ${d.step}…</p>
+    <div class="stack">
+      ${ending?`<button class="btn" data-finish style="background:${d.color}">Done 💜</button>`
+              :`<button class="btn" data-cdnext style="background:${d.color}">${next}</button>`}
+      <button class="btn-ghost" data-finish>I'm done</button>
+    </div>
+  </div>`;
+}
+
+/* ── Breathing ── */
+function rBreathe(d){
+  return `<div class="gap">
+    <div class="breath-wrap"><div class="breath" id="breath"><i></i></div></div>
+    <div style="min-height:52px;display:flex;flex-direction:column;align-items:center;gap:3px">
+      <p class="big" id="breath-label" style="font-weight:300">Ready when you are</p>
+      <p class="hint" id="breath-sub">${d.note}</p>
+    </div>
+    <button class="tap" id="breath-btn" data-breath style="width:60px;height:60px;background:${d.color}">${I.play}</button>
+    <button class="btn-ghost" data-finish>Finish</button>
+  </div>`;
+}
+function bindBreath(){
+  const bb=document.getElementById('breath-btn');
+  if(bb)bb.onclick=()=>{const a=ST.a;a.running=!a.running;bb.innerHTML=a.running?I.pause:I.play;if(a.running)stepBreath();else clrT();};
+}
+function stepBreath(){
+  const d=CONFIG.activities[ST.id],a=ST.a;
+  const el=document.getElementById('breath'),lb=document.getElementById('breath-label'),sb=document.getElementById('breath-sub');
+  if(!el)return;
+  const ph=d.pattern[a.pi];
+  if(lb)lb.textContent=ph.name;if(sb)sb.textContent=ph.sub;
+  el.style.transition='transform '+ph.ms+'ms ease-in-out';el.style.transform='scale('+ph.scale+')';
+  timers.push(setTimeout(()=>{a.pi=(a.pi+1)%d.pattern.length;if(a.running)stepBreath();},ph.ms));
+}
+
+/* ── Tasks (Little joys) ── */
+function rTasks(d){
+  const a=ST.a;
+  const items=d.items.map((it,k)=>`
+    <button class="task ${a.done[k]?'done':''}" data-task="${k}">
+      <span class="emoji">${it.emoji}</span><b>${it.label}</b><span class="box">${I.check}</span>
+    </button>`).join('');
+  return `<div class="gap" style="gap:16px">
+    <p class="hint">${d.note}</p>
+    <div class="tasks">${items}</div>
+    <button class="btn" data-finish style="background:${d.color}">${d.doneText}</button>
+  </div>`;
+}
+
+/* ── Reminders (daily anchors — grouped; ticks persist for today, reset next day) ── */
+function rReminders(d){
+  const state=todayRem();
+  const exp=ST.a.expanded||{};
+  const groups=d.groups||[{name:"",open:true}];
+  let html='';
+  groups.forEach((g,gi)=>{
+    const itemsHtml=d.items
+      .map((it,k)=>({it:it,k:k}))
+      .filter(x=>(x.it.group||0)===gi)
+      .map(x=>`
+        <button class="task ${state.done[x.k]?'done':''}" data-rem="${x.k}">
+          <span class="emoji">${x.it.emoji}</span><b>${esc(x.it.label)}</b><span class="box">${I.check}</span>
+        </button>`).join('');
+    if(!itemsHtml)return;
+    const isOpen=g.open||exp[gi];
+    html+=`<div class="rem-group">`;
+    if(g.name){
+      html+=`<div class="rem-glabel">${esc(g.name)}</div>`;
+    }
+    if(isOpen){
+      html+=`<div class="tasks">${itemsHtml}</div>`;
+    }else{
+      const n=d.items.filter(it=>(it.group||0)===gi).length;
+      html+=`<button class="rem-more" data-remexp="${gi}">＋ ${esc(g.name||'more')} (${n})</button>`;
+    }
+    html+=`</div>`;
+  });
+  return `<div class="gap" style="gap:14px">
+    <p class="hint">${d.note}</p>
+    <div style="width:100%;display:flex;flex-direction:column;gap:14px">${html}</div>
+    <button class="btn" data-finish style="background:${d.color}">${d.doneText}</button>
+  </div>`;
+}
+
+/* ── My wins (self-check; tick = star, untick = takes it back) ── */
+function rMyWins(d){
+  const state=todayWins();
+  const items=d.items.map((it,k)=>`
+    <button class="task ${state.done[k]?'done':''}" data-win="${k}">
+      <span class="emoji">${it.emoji}</span><b>${esc(it.label)}</b>
+      <span class="wpts">+${it.pts||1}</span>
+      <span class="box">${I.check}</span>
+    </button>`).join('');
+  return `<div class="gap" style="gap:14px">
+    <p class="hint">${d.note}</p>
+    <div class="tasks">${items}</div>
+    <button class="btn" data-finish style="background:${d.color}">${d.doneText}</button>
+  </div>`;
+}
+
+/* ── One Hard Thing ── */
+function rHardThing(d){
+  const a=ST.a;
+  if(a.saved){
+    return `<div class="gap">
+      <div class="badge" style="background:#8b5cf61f;color:#8b5cf6">${I.flag}</div>
+      <p class="big" style="font-weight:300">${d.savedTitle}</p>
+      <p class="hint">${d.savedSub}</p>
+      <button class="btn-soft" data-hardhist>See past ones</button>
+      <button class="btn" data-home>Done</button>
+    </div>`;
+  }
+  const can=a.text&&a.text.trim().length>0;
+  return `<div class="gap" style="gap:16px">
+    <p class="lead" style="font-size:15px">${d.prompt}</p>
+    <textarea class="hard-note" id="hard-note" placeholder="${d.placeholder}" rows="3">${esc(a.text||'')}</textarea>
+    <div class="mood-row">
+      <button class="btn" data-hardsave style="background:${can?'#8b5cf6':'#d1d5db'};${can?'':'cursor:default'}">${can?d.saveText:'Write something first'}</button>
+      <button class="btn-ghost" data-skip>Skip</button>
+    </div>
+  </div>`;
+}
+
+/* ── Mood Entry ── */
+function rMoodEntry(){
+  const a=ST.a;
+  const scale=[-5,-4,-3,-2,-1,0,1,2,3,4,5];
+  const sel=a.score;
+  const readout=sel===null?`<div class="num empty">–</div>`
+    :`<div class="num" style="background:${scoreColor(sel)}">${sel>0?'+'+sel:sel}</div>`;
+  const dots=scale.map(n=>{
+    const isSel=sel===n,lbl=n>0?'+'+n:String(n);
+    return `<button class="ms-btn" data-score="${n}">
+      <span class="ms-dot ${isSel?'sel':''}" style="${isSel?'background:'+scoreColor(n)+';border-color:'+scoreColor(n):''}">${lbl}</span>
+    </button>`;
+  }).join('');
+  const can=sel!==null;
+  return `<div class="gap" style="gap:18px">
+    <p class="lead" style="font-size:15px">How are you feeling right now?</p>
+    <div class="mood-readout">${readout}<span class="cap">${sel===null?'tap a number below':'right now'}</span></div>
+    <div class="mood-scale"><div class="ms-track"></div>${dots}</div>
+    <textarea class="mood-note" id="mood-note" placeholder="Anything you want to add? (totally optional 🌸)" rows="3">${esc(a.note||'')}</textarea>
+    <div class="mood-row">
+      <button class="btn" data-moodsubmit style="background:${can?'#f59e0b':'#d1d5db'};${can?'':'cursor:default'}">${can?'Save 💛':'Pick a number first'}</button>
+      <button class="btn-ghost" data-skip>Skip</button>
+    </div>
+  </div>`;
+}
+
+/* ── Name It ── */
+function rNameIt(d){
+  const a=ST.a;
+  if(!a.picked)return `<div class="gap" style="gap:20px">
+    <p class="big" style="font-size:22px">${d.prompt}</p>
+    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:9px;width:100%">
+      ${d.words.map(w=>`<button style="padding:13px 5px;border-radius:14px;background:#fdf2f4;color:#e7607c;font-size:14px;border:1.5px solid #fbe2e8" data-word="${w}">${w}</button>`).join('')}
+    </div>
+    <p class="hint">${d.privacyNote}</p>
+  </div>`;
+  return `<div class="gap">
+    <div class="badge" style="background:#fb71851f;color:#fb7185">${I.heart}</div>
+    <p class="big" style="font-weight:300">${d.reply}</p>
+    <p class="hint">${d.replySub}</p>
+    <button class="btn" data-home>Done</button>
+  </div>`;
+}
+
+/* ════════════════════════════════════════════════════════════
+   FINISHED / FLOWDONE
+   ════════════════════════════════════════════════════════════ */
+function renderFinished(){
+  const d=ST.id?CONFIG.activities[ST.id]:null;
+  return `<div class="pane fade"><div class="gap">
+    <div class="badge">${I.check}</div>
+    <p class="big" style="font-weight:300">${d&&d.finished||'Nicely done 🌸'}</p>
+    <button class="btn" data-home>Done</button>
+  </div></div>`;
+}
+function renderFlowDone(){
+  return `<div class="pane fade"><div class="gap">
+    <div class="badge">${I.check}</div>
+    <p class="big" style="font-weight:300">${CONFIG.dailyMoment.finished}</p>
+    <button class="btn" data-home>Done</button>
+  </div></div>`;
+}
+
+/* ════════════════════════════════════════════════════════════
+   MOOD HISTORY + CHART
+   ════════════════════════════════════════════════════════════ */
+function filterEntries(arr,seg){
+  const now=Date.now(),ms={week:7,fortnight:14,month:30};
+  const cutoff=now-(ms[seg]||7)*86400000;
+  return arr.filter(m=>m.ts>=cutoff);
+}
+function renderHistory(){
+  const seg=ST.histSeg||'week';
+  const entries=filterEntries(loadMoods(),seg);
+  const rows=entries.length?[...entries].reverse().map(m=>{
+    const lbl=m.score>0?'+'+m.score:String(m.score),col=scoreColor(m.score);
+    return `<div class="entry-row">
+      <div class="entry-score" style="background:${col}">${lbl}</div>
+      <div style="flex:1;min-width:0">
+        <div class="entry-meta">${fmtDateTime(m.ts)}</div>
+        ${m.note?`<div class="entry-note">${esc(m.note)}</div>`:''}
+      </div>
+    </div>`;
+  }).join(''):`<p class="hint" style="text-align:center;padding:20px 0">No records yet 🌸</p>`;
+  return `<div class="bar">
+    <button class="iconbtn" data-home>${I.back}</button><span class="bar-title">Mood history</span>
+  </div>
+  <div class="pane fade" style="justify-content:flex-start;padding-top:18px;gap:14px">
+    <div class="seg">
+      <button class="${seg==='week'?'on':''}" data-seg="week">Week</button>
+      <button class="${seg==='fortnight'?'on':''}" data-seg="fortnight">2 Weeks</button>
+      <button class="${seg==='month'?'on':''}" data-seg="month">Month</button>
+    </div>
+    <div id="chart-wrap"><canvas id="chart"></canvas></div>
+    <div class="entry-list">${rows}</div>
+    <button class="linkrow" data-datascreen>Backup &amp; data →</button>
+  </div>`;
+}
+function drawChart(seg){
+  const canvas=document.getElementById('chart');
+  if(!canvas)return;
+  const ctx=canvas.getContext&&canvas.getContext('2d');
+  if(!ctx)return;
+  const entries=filterEntries(loadMoods(),seg);
+  const W=canvas.offsetWidth||320,H=180;
+  canvas.width=W;canvas.height=H;ctx.clearRect(0,0,W,H);
+  const pad={t:16,b:28,l:28,r:12},iW=W-pad.l-pad.r,iH=H-pad.t-pad.b;
+  ctx.strokeStyle='#f0eaf8';ctx.lineWidth=1;
+  [-5,-4,-3,-2,-1,0,1,2,3,4,5].forEach(v=>{
+    const y=pad.t+iH*(1-(v+5)/10);
+    ctx.beginPath();ctx.moveTo(pad.l,y);ctx.lineTo(pad.l+iW,y);ctx.stroke();
+    if(v%5===0||v===0){ctx.fillStyle='#9b8cb0';ctx.font='10px ui-rounded,system-ui,sans-serif';ctx.fillText(v>0?'+'+v:String(v),2,y+3);}
+  });
+  if(!entries.length)return;
+  const pts=entries.slice().sort((a,b)=>a.ts-b.ts);
+  const tMin=pts[0].ts,tMax=pts[pts.length-1].ts||tMin+1;
+  const tx=t=>pad.l+((t-tMin)/(tMax-tMin||1))*iW, ty=v=>pad.t+iH*(1-(v+5)/10);
+  ctx.beginPath();
+  pts.forEach((m,i)=>i?ctx.lineTo(tx(m.ts),ty(m.score)):ctx.moveTo(tx(m.ts),ty(m.score)));
+  ctx.lineTo(tx(pts[pts.length-1].ts),H-pad.b);ctx.lineTo(pad.l,H-pad.b);ctx.closePath();
+  const grad=ctx.createLinearGradient(0,pad.t,0,H-pad.b);
+  grad.addColorStop(0,'rgba(139,92,246,.18)');grad.addColorStop(1,'rgba(139,92,246,0)');
+  ctx.fillStyle=grad;ctx.fill();
+  ctx.beginPath();ctx.strokeStyle='#8b5cf6';ctx.lineWidth=2.4;ctx.lineJoin='round';
+  pts.forEach((m,i)=>i?ctx.lineTo(tx(m.ts),ty(m.score)):ctx.moveTo(tx(m.ts),ty(m.score)));
+  ctx.stroke();
+  pts.forEach(m=>{ctx.beginPath();ctx.arc(tx(m.ts),ty(m.score),4,0,Math.PI*2);ctx.fillStyle=scoreColor(m.score);ctx.fill();ctx.strokeStyle='#fff';ctx.lineWidth=1.5;ctx.stroke();});
+}
+
+/* ════════════════════════════════════════════════════════════
+   HARD-THING HISTORY
+   ════════════════════════════════════════════════════════════ */
+function renderHardHistory(){
+  const arr=loadHard();
+  const rows=arr.length?[...arr].reverse().map(x=>`
+    <div class="hard-item">
+      <span class="em">💪</span>
+      <div style="flex:1;min-width:0"><div class="t">${esc(x.text)}</div><div class="d">${fmtDateTime(x.ts)}</div></div>
+      <button class="hard-del" data-delhard="${x.ts}" aria-label="Remove this one">${I.close}</button>
+    </div>`).join(''):`<p class="hint" style="text-align:center;padding:20px 0">Nothing here yet — but it will fill up 💜</p>`;
+  return `<div class="bar">
+    <button class="iconbtn" data-home>${I.back}</button><span class="bar-title">Hard things you've done</span>
+  </div>
+  <div class="pane fade" style="justify-content:flex-start;padding-top:18px;gap:12px">
+    <p class="hint" style="max-width:none">Every one of these took courage. 🌱</p>
+    <div class="entry-list" style="max-height:420px;gap:9px">${rows}</div>
+  </div>`;
+}
+
+/* ════════════════════════════════════════════════════════════
+   BACKUP & DATA
+   ════════════════════════════════════════════════════════════ */
+function renderData(){
+  const nMood=loadMoods().length,nHard=loadHard().length;
+  return `<div class="bar">
+    <button class="iconbtn" data-home>${I.back}</button><span class="bar-title">Backup &amp; data</span>
+  </div>
+  <div class="pane fade" style="justify-content:flex-start;padding-top:18px;gap:14px">
+    <p class="hint" style="max-width:none">You have <b>${nMood}</b> mood record(s) and <b>${nHard}</b> hard-thing record(s) saved on this device.</p>
+    <div class="data-list">
+      <button class="data-btn" data-backup>
+        <span class="chip" style="background:#10b98122;color:#10b981">${I.save}</span>
+        <span><b>Back up everything</b><span>saves mood + hard things to a .json file</span></span>
+      </button>
+      <button class="data-btn" data-import>
+        <span class="chip" style="background:#8b5cf622;color:#8b5cf6">${I.upload}</span>
+        <span><b>Import a file</b><span>bring in a .json backup, or a .ics from the old app</span></span>
+      </button>
+      <button class="data-btn" data-export>
+        <span class="chip" style="background:#f59e0b22;color:#f59e0b">${I.cal}</span>
+        <span><b>Export mood to calendar</b><span>a .ics file for Google / Apple Calendar</span></span>
+      </button>
+      <button class="data-btn" data-csv>
+        <span class="chip" style="background:#0ea5e922;color:#0ea5e9">${I.doc}</span>
+        <span><b>Export as spreadsheet</b><span>a .csv to open in Excel, or to print / share</span></span>
+      </button>
+      <button class="data-btn" data-clearall>
+        <span class="chip" style="background:#fb718522;color:#fb7185">${I.trash}</span>
+        <span><b style="color:#e11d48">Delete all data</b><span>clears everything on this device</span></span>
+      </button>
+    </div>
+    <input type="file" id="importfile" accept=".ics,.json,text/calendar,application/json" style="display:none"/>
+    <div class="data-note">💡 Records live only on this device's browser. If you clear browser data or switch phones, they're gone — so back up now and then. To move to a new phone: back up here, open the app there, then Import.</div>
+  </div>`;
+}
+
+/* ════════════════════════════════════════════════════════════
+   BIND
+   ════════════════════════════════════════════════════════════ */
+function bind(){
+  q('[data-home]',b=>b.onclick=goHome);
+  q('[data-flow]',b=>b.onclick=startFlow);
+  q('[data-open]',b=>b.onclick=()=>openAct(b.dataset.open));
+  q('[data-finish]',b=>b.onclick=finish);
+  q('[data-skip]',b=>b.onclick=skipStep);
+  q('[data-hist]',b=>b.onclick=()=>{ST.histSeg='week';go('history');});
+  q('[data-hardhist]',b=>b.onclick=()=>go('hardhistory'));
+  q('[data-datascreen]',b=>b.onclick=()=>go('data'));
+  q('[data-struggling]',b=>b.onclick=()=>go('struggling'));
+  q('[data-more]',b=>b.onclick=()=>go('more'));
+  q('[data-rewards]',b=>b.onclick=()=>go('rewards'));
+  q('[data-seg]',b=>b.onclick=()=>{ST.histSeg=b.dataset.seg;go('history');});
+
+  // data screen
+  q('[data-export]',b=>b.onclick=exportICS);
+  q('[data-csv]',b=>b.onclick=exportCSV);
+  q('[data-backup]',b=>b.onclick=exportBackup);
+  q('[data-import]',b=>b.onclick=()=>{const f=document.getElementById('importfile');if(f)f.click();});
+  q('[data-clearall]',b=>b.onclick=()=>{if(confirm('Delete ALL mood and hard-thing records on this device? This cannot be undone.')){clearAllData();go('data');}});
+  const fi=document.getElementById('importfile');
+  if(fi)fi.onchange=function(){handleImportFile(this.files&&this.files[0]);this.value='';};
+
+  // sensory
+  q('[data-tap]',b=>b.onclick=()=>{
+    const a=ST.a,s=CONFIG.activities[ST.id].senses[a.si];
+    if(a.locked)return;a.tapped++;
+    if(a.tapped>=s.count){a.locked=true;draw();
+      timers.push(setTimeout(()=>{a.si++;a.tapped=0;a.locked=false;a.si>=CONFIG.activities[ST.id].senses.length?finish():draw();},700));
+    }else draw();
+  });
+  // sequence
+  q('[data-next]',b=>b.onclick=()=>{const a=ST.a,d=CONFIG.activities[ST.id];a.i>=d.steps.length-1?finish():(a.i++,draw());});
+  // colour
+  q('[data-found]',b=>b.onclick=()=>{const a=ST.a,d=CONFIG.activities[ST.id];a.count=Math.min(d.target,a.count+1);draw();});
+  q('[data-newcolour]',b=>b.onclick=()=>{const a=ST.a,d=CONFIG.activities[ST.id];let n=a.ci;while(n===a.ci&&d.colours.length>1)n=Math.floor(Math.random()*d.colours.length);a.ci=n;a.count=0;draw();});
+  // countdown
+  q('[data-cdstart]',b=>b.onclick=()=>{ST.a.started=true;draw();});
+  q('[data-cdnext]',b=>b.onclick=()=>{const a=ST.a,d=CONFIG.activities[ST.id];a.current-=d.step;a.current<0?finish():draw();});
+  // tasks
+  q('[data-task]',b=>b.onclick=()=>{const k=b.dataset.task;ST.a.done[k]=!ST.a.done[k];draw();});
+  // reminders (persist for today; untick takes the star back — a correction)
+  q('[data-rem]',b=>b.onclick=()=>{
+    const k=b.dataset.rem;const o=todayRem();const on=!o.done[k];o.done[k]=on;saveRem(o);
+    const it=CONFIG.activities.reminders.items[k];const pts=(it&&it.pts)||CONFIG.rewards.defaultAnchorPts;
+    const key='rem:'+dateKey()+':'+k;
+    if(on)awardPts('anchor',pts,key); else revokePts(key);
+    draw();
+  });
+  q('[data-remexp]',b=>b.onclick=()=>{if(!ST.a.expanded)ST.a.expanded={};ST.a.expanded[b.dataset.remexp]=true;draw();});
+  // my wins (tick = star; untick = takes it back)
+  q('[data-win]',b=>b.onclick=()=>{
+    const k=b.dataset.win;const o=todayWins();const on=!o.done[k];o.done[k]=on;saveWins(o);
+    const it=CONFIG.activities.mywins.items[k];const pts=(it&&it.pts)||1;
+    const key='win:'+dateKey()+':'+k;
+    if(on)awardPts('win',pts,key); else revokePts(key);
+    draw();
+  });
+  // delete a hard-thing record (correction — also takes its star back)
+  q('[data-delhard]',b=>b.onclick=()=>{
+    const ts=Number(b.dataset.delhard);
+    if(confirm('Remove this one? This is just a correction — no worries either way.')){
+      saveHard(loadHard().filter(h=>h.ts!==ts));
+      revokePts('hard:'+ts);
+      go('hardhistory');
+    }
+  });
+  // hard thing
+  const hn=document.getElementById('hard-note');
+  if(hn)hn.oninput=()=>{
+    ST.a.text=hn.value;
+    const btn=document.querySelector('[data-hardsave]');
+    if(btn){
+      const can=hn.value.trim().length>0;
+      btn.style.background=can?'#8b5cf6':'#d1d5db';
+      btn.style.cursor=can?'':'default';
+      btn.textContent=can?CONFIG.activities[ST.id].saveText:'Write something first';
+    }
+  };
+  q('[data-hardsave]',b=>b.onclick=()=>{
+    const tn=document.getElementById('hard-note');const text=tn?tn.value:ST.a.text||'';
+    if(!text.trim())return;
+    const ts=addHard(text.trim());
+    awardPts('hard',CONFIG.rewards.hardThingPts,'hard:'+ts);
+    if(ST.flow)return advFlow();
+    ST.a.saved=true;draw();
+  });
+  // mood
+  q('[data-score]',b=>b.onclick=()=>{ST.a.score=Number(b.dataset.score);const tn=document.getElementById('mood-note');if(tn)ST.a.note=tn.value;draw();});
+  const mn=document.getElementById('mood-note');
+  if(mn)mn.oninput=()=>{ST.a.note=mn.value;};
+  q('[data-moodsubmit]',b=>b.onclick=()=>{
+    if(ST.a.score===null)return;
+    const tn=document.getElementById('mood-note');const note=tn?tn.value:ST.a.note||'';
+    addMood(ST.a.score,note);finish();
+  });
+  // name it
+  q('[data-word]',b=>b.onclick=()=>{ST.a.picked=b.dataset.word;draw();});
+}
+function q(sel,fn){document.querySelectorAll(sel).forEach(fn);}
+
+draw();
+</script>
+</body></html>
