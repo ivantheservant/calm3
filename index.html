@@ -86,8 +86,8 @@ svg{display:block;} .ic{width:100%;height:100%;}
 .eyebrow{display:flex;align-items:center;gap:6px;font-size:12px;font-weight:700;
   letter-spacing:.06em;color:var(--latte);margin-bottom:6px;}
 .eyebrow .dot{width:14px;height:14px;}
-h1.greet{font-size:25px;line-height:1.25;font-weight:700;color:var(--ink-strong);margin-bottom:4px;}
-.sub{font-size:14px;color:var(--ink-soft);line-height:1.5;margin-bottom:14px;}
+h1.greet{font-size:26px;line-height:1.25;font-weight:700;color:var(--ink-strong);margin-bottom:4px;}
+.sub{font-size:15px;color:var(--ink-soft);line-height:1.5;margin-bottom:14px;}
 
 /* anchors */
 .anchor{display:flex;align-items:center;gap:12px;width:100%;text-align:left;
@@ -97,8 +97,8 @@ h1.greet{font-size:25px;line-height:1.25;font-weight:700;color:var(--ink-strong)
 .anchor .chip{width:44px;height:44px;border-radius:13px;display:flex;align-items:center;
   justify-content:center;flex:0 0 auto;}
 .anchor .chip svg{width:22px;height:22px;}
-.anchor b{display:block;font-size:16px;font-weight:700;color:var(--ink-strong);}
-.anchor span{font-size:12px;color:var(--ink-soft);}
+.anchor b{display:block;font-size:17.5px;font-weight:700;color:var(--ink-strong);}
+.anchor span{font-size:13px;color:var(--ink-soft);}
 .anchor.start{background:linear-gradient(135deg,#f3e8ff,#fce7f3);border-color:#e9d5ff;}
 .anchor.start .chip{background:#8b5cf622;color:#8b5cf6;}
 .anchor.mood-entry{background:linear-gradient(135deg,#fef9ee,#fdf4e3);border-color:#fde68a;}
@@ -114,16 +114,16 @@ h1.greet{font-size:25px;line-height:1.25;font-weight:700;color:var(--ink-strong)
 /* rewards screen */
 .stars-today{display:flex;flex-direction:column;align-items:center;gap:2px;}
 .st-num{font-size:40px;font-weight:700;color:#d97706;line-height:1;}
-.st-cap{font-size:12px;color:var(--ink-soft);}
+.st-cap{font-size:13px;color:var(--ink-soft);}
 .goal-card{width:100%;border:1.5px solid var(--line);border-radius:18px;padding:16px;background:var(--card);
   box-shadow:0 6px 18px -12px rgba(45,27,78,.2);}
-.goal-title{font-size:13px;font-weight:700;color:var(--ink-strong);margin-bottom:10px;letter-spacing:.02em;}
+.goal-title{font-size:14.5px;font-weight:700;color:var(--ink-strong);margin-bottom:10px;letter-spacing:.02em;}
 .goal-row{display:flex;align-items:center;gap:10px;padding:7px 0;}
 .goal-box{width:22px;height:22px;border-radius:7px;border:2px solid var(--ink-faint);flex:0 0 auto;
   display:flex;align-items:center;justify-content:center;color:#fff;}
 .goal-box svg{width:12px;height:12px;}
 .goal-row.on .goal-box{background:var(--safe);border-color:var(--safe);}
-.goal-label{font-size:13.5px;color:var(--ink);line-height:1.35;}
+.goal-label{font-size:15px;color:var(--ink);line-height:1.35;}
 .goal-row.on .goal-label{color:var(--ink-soft);}
 .reward-win{margin-top:12px;background:linear-gradient(135deg,#fef9c3,#fce7f3);border-radius:14px;
   padding:14px;text-align:center;font-size:14px;font-weight:600;color:#b45309;display:flex;
@@ -136,8 +136,20 @@ h1.greet{font-size:25px;line-height:1.25;font-weight:700;color:var(--ink-strong)
 /* room scene */
 .room-wrap{width:100%;border-radius:16px;overflow:hidden;box-shadow:0 8px 22px -12px rgba(45,27,78,.3);
   border:1.5px solid var(--line);}
-.room-cap{font-size:12.5px;color:var(--ink-soft);text-align:center;line-height:1.45;
+.room-cap{font-size:13.5px;color:var(--ink-soft);text-align:center;line-height:1.45;
   background:var(--chip);border-radius:12px;padding:8px 12px;width:100%;}
+.daily-prog{width:100%;background:linear-gradient(135deg,#fef9c3,#fef3c7);border:1.5px solid #fde68a;
+  border-radius:14px;padding:12px 14px;font-size:14.5px;color:#b45309;text-align:center;font-weight:600;}
+.reward-win small{font-size:12.5px;font-weight:500;color:#92600b;opacity:.85;}
+/* how to earn stars */
+.earn-row{display:flex;align-items:flex-start;gap:11px;width:100%;padding:12px 13px;
+  border-radius:14px;background:var(--card);border:1.5px solid var(--line);
+  box-shadow:0 4px 14px -10px rgba(45,27,78,.18);}
+.earn-stars{font-size:14px;flex:0 0 auto;line-height:1.5;letter-spacing:-1px;}
+.earn-txt b{display:block;font-size:15.5px;font-weight:700;color:var(--ink-strong);}
+.earn-txt span{font-size:13.5px;color:var(--ink-soft);line-height:1.4;}
+.earn-note{width:100%;background:var(--chip);border-radius:14px;padding:12px 14px;
+  font-size:13.5px;color:var(--ink-soft);line-height:1.55;}
 
 /* section label */
 .picklabel{font-size:10px;font-weight:700;letter-spacing:.09em;text-transform:uppercase;
@@ -153,14 +165,14 @@ h1.greet{font-size:25px;line-height:1.25;font-weight:700;color:var(--ink-strong)
 .row .chip{width:44px;height:44px;border-radius:13px;display:flex;align-items:center;
   justify-content:center;flex:0 0 auto;}
 .row .chip svg{width:21px;height:21px;}
-.row b{display:block;font-size:16px;font-weight:600;color:var(--ink-strong);}
-.row span{font-size:12px;color:var(--ink-soft);}
+.row b{display:block;font-size:17.5px;font-weight:600;color:var(--ink-strong);}
+.row span{font-size:13px;color:var(--ink-soft);}
 .foot{font-size:11px;color:var(--ink-faint);text-align:center;margin-top:auto;padding-top:18px;}
 
 /* ── text styles ── */
 .big{font-size:26px;font-weight:300;color:var(--ink-strong);line-height:1.3;max-width:18rem;}
-.lead{font-size:17px;color:var(--ink);max-width:17rem;line-height:1.45;}
-.hint{font-size:13px;color:var(--ink-soft);max-width:18rem;line-height:1.55;}
+.lead{font-size:18.5px;color:var(--ink);max-width:17rem;line-height:1.45;}
+.hint{font-size:14.5px;color:var(--ink-soft);max-width:18rem;line-height:1.55;}
 .count{font-size:62px;font-weight:300;color:var(--ink-strong);line-height:1;}
 
 /* dots */
@@ -176,10 +188,10 @@ h1.greet{font-size:25px;line-height:1.25;font-weight:700;color:var(--ink-strong)
 .tap small{font-size:14px;font-weight:300;}
 
 /* pill buttons */
-.btn{padding:14px 40px;border-radius:999px;font-size:16px;font-weight:600;color:#fff;
+.btn{padding:14px 40px;border-radius:999px;font-size:17px;font-weight:600;color:#fff;
   background:var(--accent);transition:transform var(--speed);display:inline-block;}
 .btn:active{transform:scale(.96);}
-.btn-soft{padding:11px 28px;border-radius:999px;font-size:14px;background:var(--chip);
+.btn-soft{padding:12px 28px;border-radius:999px;font-size:15px;background:var(--chip);
   color:var(--ink);font-weight:500;}
 .btn-ghost{font-size:13px;color:var(--ink-soft);padding:7px 16px;}
 
@@ -202,15 +214,31 @@ h1.greet{font-size:25px;line-height:1.25;font-weight:700;color:var(--ink-strong)
   transition:transform var(--speed);}
 .task:active{transform:scale(.98);}
 .task .emoji{font-size:20px;width:26px;text-align:center;flex:0 0 auto;}
-.task b{font-size:15px;font-weight:400;color:var(--ink);flex:1;line-height:1.35;}
+.task b{font-size:16.5px;font-weight:400;color:var(--ink);flex:1;line-height:1.35;}
 .task .box{width:24px;height:24px;border-radius:7px;border:2px solid var(--ink-faint);
   display:flex;align-items:center;justify-content:center;color:#fff;flex:0 0 auto;}
 .task.done .box{background:var(--safe);border-color:var(--safe);}
 .task.done .box svg{width:13px;height:13px;}
 .task.done b{color:var(--ink-soft);}
-.wpts{font-size:11px;font-weight:700;color:#d97706;background:#f59e0b1a;border-radius:8px;
+.wpts{font-size:12.5px;font-weight:700;color:#d97706;background:#f59e0b1a;border-radius:8px;
   padding:2px 7px;flex:0 0 auto;}
 .task.done .wpts{color:var(--ink-soft);background:var(--chip);}
+.multi-box{display:flex;gap:5px;flex:0 0 auto;}
+.today-hard{display:flex;align-items:center;gap:12px;width:100%;text-align:left;padding:13px 14px;
+  border-radius:16px;background:linear-gradient(135deg,#f5f3ff,#faf5ff);border:1.5px dashed #c4b5fd;
+  transition:transform var(--speed);}
+.today-hard:active{transform:scale(.98);}
+.today-hard .emoji{font-size:20px;width:26px;text-align:center;flex:0 0 auto;}
+.th-txt{flex:1;}
+.th-txt b{display:block;font-size:16.5px;font-weight:600;color:#7c3aed;}
+.th-txt span{font-size:13px;color:var(--ink-soft);}
+.th-go{font-size:24px;font-weight:600;color:#a78bfa;flex:0 0 auto;line-height:1;}
+.mbox{width:22px;height:22px;border-radius:6px;border:2px solid var(--ink-faint);
+  display:flex;align-items:center;justify-content:center;color:#fff;flex:0 0 auto;
+  background:transparent;transition:all var(--speed);}
+.mbox.on{background:var(--safe);border-color:var(--safe);}
+.mbox svg{width:12px;height:12px;}
+.mbox:active{transform:scale(.88);}
 .hard-del{width:28px;height:28px;border-radius:8px;background:transparent;color:var(--ink-faint);
   flex:0 0 auto;display:flex;align-items:center;justify-content:center;transition:all var(--speed);}
 .hard-del:active{transform:scale(.9);}
@@ -236,7 +264,7 @@ h1.greet{font-size:25px;line-height:1.25;font-weight:700;color:var(--ink-strong)
 .ms-dot.sel{width:36px;height:36px;font-size:13px;color:#fff;border-color:#fff;
   box-shadow:0 6px 18px -3px rgba(45,27,78,.45);}
 .mood-note{width:100%;border:1.5px solid var(--line);border-radius:14px;
-  padding:11px 14px;font-family:var(--font);font-size:14px;color:var(--ink);
+  padding:11px 14px;font-family:var(--font);font-size:15px;color:var(--ink);
   background:var(--chip);resize:none;outline:none;min-height:72px;
   transition:border-color var(--speed);}
 .mood-note:focus{border-color:var(--accent);}
@@ -264,7 +292,7 @@ canvas#chart{display:block;width:100%;height:180px;}
 
 /* ── hard thing ── */
 .hard-note{width:100%;border:1.5px solid var(--line);border-radius:14px;padding:12px 14px;
-  font-family:var(--font);font-size:15px;color:var(--ink);background:var(--chip);
+  font-family:var(--font);font-size:16px;color:var(--ink);background:var(--chip);
   resize:none;outline:none;min-height:88px;transition:border-color var(--speed);}
 .hard-note:focus{border-color:var(--accent);}
 .hard-note::placeholder{color:var(--ink-faint);}
@@ -448,38 +476,39 @@ const CONFIG={
        ★ EDIT THESE ITEMS — change text, add/remove lines, or move an
          item to another group by changing its "group" number. ★
        ───────────────────────────────────────────────────────── */
-    reminders:{
-      enabled:true,type:"reminderList",
-      title:"Today's anchors",blurb:"gentle reminders 🌟",
+    /* ─────────────────────────────────────────────────────────
+       TODAY ✨ — one merged list, two sections:
+         • mind — think / heart (1 pt each, one tick a day)
+         • did  — things I did (3-pt actions get 3 boxes = up to 3×/day;
+                  lighter ones are 1 pt, one tick a day)
+       Ticks reset each day; the STARS earned stay. Untick = correction.
+       ★ EDIT items / pts / section freely. Give each a unique id. ★
+       ───────────────────────────────────────────────────────── */
+    today:{
+      enabled:true,type:"todayList",
+      title:"Today",blurb:"hold a thought · tick what you did ✨",
       icon:"star",color:"#f59e0b",
-      note:"Little things to hold onto today. Tap the ones that help — skipping is fine.",
-      doneText:"Done for now",
-      finished:"Held, for today 🌟",
-      groups:[
-        {name:"Hold onto today", open:true},   // group 0
-        {name:"When it's hard",  open:false},  // group 1
-        {name:"Little steps today", open:false}// group 2
-      ],
+      note:"Read the ones that help, and tick anything you did. Tapped by mistake? Just untick — it's yours to manage.",
+      doneText:"Look at you 🌟",
+      finished:"Look at everything you held and did today 🌟",
+      sections:{ mind:"Mind & heart 💛", did:"Things I did ✅" },
       items:[
-        // group 0 — Hold onto today
-        {group:0,emoji:"🙏",label:"Right now, Jesus is here with me — and in my hardest moments, He was there too."},
-        {group:0,emoji:"💛",label:"Even if I can't feel it right now — I am loved. Remember one time I knew it (even from when I was little)."},
-        {group:0,emoji:"🫂",label:"People love me, and they're glad I'm here. I belong, and I'm not alone."},
-        {group:0,emoji:"🤗",label:"A hug with Mum — even a small one. Reach out when I'm ready.",pts:3},
-        {group:0,emoji:"🧸",label:"Hold Jesus close, and tell Him what's on my heart — He's right here."},
-        // group 1 — When it's hard
-        {group:1,emoji:"🌊",label:"Feeling it rise? Pause — I can say \"I'm not okay\" instead of letting it out on someone.",pts:3},
-        {group:1,emoji:"💬",label:"Reach out today — a word, a text, even an emoji. Asking is brave.",pts:3},
-        {group:1,emoji:"💔",label:"Just this one feeling today — I don't have to carry it all at once."},
-        // group 2 — Little steps today
-        {group:2,emoji:"🎯",label:"When my mind races — put it on what I'm doing right now. Do this one thing well."},
-        {group:2,emoji:"🧭",label:"Give my mind a job: what's one thing I'd like to do, learn, or look into today?"},
-        {group:2,emoji:"💪",label:"One brave thing today — even a tiny step counts as a win."},
-        {group:2,emoji:"📝",label:"Plan one small step — when will I do it? (even \"ask for help\" counts)"},
-        {group:2,emoji:"🏠",label:"If I've got a little energy — help out with one small thing at home.",pts:3},
-        {group:2,emoji:"📵",label:"A little screen-free time — put the phone down for a bit and just be. It'll still be here."},
-        {group:2,emoji:"🎮",label:"If I've got the energy — something I enjoy: a game, drums, a video to learn from. No pushing."},
-        {group:2,emoji:"🌱",label:"One day my heart for others will help people. For now, healing is enough — I don't have to be ready yet."}
+        // mind — think / heart (1 pt, ×1)
+        {id:"jesus_here",sec:"mind",emoji:"🙏",pts:1,label:"Right now, Jesus is here with me — and in my hardest moments, He was there too."},
+        {id:"loved",     sec:"mind",emoji:"💛",pts:1,label:"Even if I can't feel it right now — I am loved. Remember one time I knew it (even from when I was little)."},
+        {id:"belong",    sec:"mind",emoji:"🫂",pts:1,label:"People love me, and they're glad I'm here. I belong, and I'm not alone."},
+        {id:"one_feeling",sec:"mind",emoji:"💔",pts:1,label:"Just this one feeling today — I don't have to carry it all at once."},
+        {id:"tell_jesus",sec:"mind",emoji:"🧸",pts:1,label:"Held Jesus close and told Him what's on my heart."},
+        {id:"healing_ok",sec:"mind",emoji:"🌱",pts:1,label:"For now, healing is enough — I don't have to be ready to help others yet."},
+        // did — actions (3 pt = ×3 boxes; 1 pt = ×1)
+        {id:"hug_mum",   sec:"did",emoji:"🤗",pts:3,label:"Gave Mum a hug"},
+        {id:"reach_out", sec:"did",emoji:"💬",pts:3,label:"Reached out / asked for help"},
+        {id:"pause",     sec:"did",emoji:"🌊",pts:3,label:"Felt it rise — paused and said \"I'm not okay\" instead of lashing out"},
+        {id:"help_home", sec:"did",emoji:"🏠",pts:3,label:"Helped with something at home"},
+        {id:"enjoy",     sec:"did",emoji:"🎮",pts:3,label:"Did something I enjoy (a game, drums, a video)"},
+        {id:"screen_free",sec:"did",emoji:"📵",pts:1,label:"Had a little screen-free time"},
+        {id:"focus",     sec:"did",emoji:"🎯",pts:1,label:"Put my mind on one thing and did it well"},
+        {id:"own_win",   sec:"did",emoji:"🌟",pts:1,label:"A win of my own (anything!)"}
       ]
     },
 
@@ -503,7 +532,7 @@ const CONFIG={
       ]
     },
 
-    /* ONE HARD THING — she writes it, saves it, and it's kept in her records */
+    /* ONE HARD THING — she writes it (5 pts each, up to 3 count per day) */
     hardthing:{
       enabled:true,type:"hardThing",
       title:"One hard thing",blurb:"something tough you did anyway 💪",
@@ -513,27 +542,6 @@ const CONFIG={
       saveText:"Save this 💜",
       savedTitle:"That took real strength 💪",
       savedSub:"Saved to your records. You can look back on these any time."
-    },
-
-    /* MY WINS — she ticks her own wins. Tick = star; untick = takes it back
-       (a correction, never a penalty). Reset daily. ★ EDIT ITEMS + pts freely. ★ */
-    mywins:{
-      enabled:true,type:"winList",
-      title:"Things I did",blurb:"tick your own wins ✅",
-      icon:"check",color:"#10b981",
-      note:"Anything you did today that you're glad about — tick it. Changed your mind, or tapped by mistake? Just untick. It's yours to manage.",
-      doneText:"Look at you 🌟",
-      finished:"Look at everything you did today 🌟",
-      items:[
-        {emoji:"🤗",label:"Gave Mum a hug",pts:3},
-        {emoji:"💬",label:"Reached out / asked for help",pts:3},
-        {emoji:"🏠",label:"Helped with something at home",pts:3},
-        {emoji:"📵",label:"Had a little screen-free time",pts:2},
-        {emoji:"🎯",label:"Put my mind on one thing",pts:2},
-        {emoji:"🎮",label:"Did something I enjoy",pts:1},
-        {emoji:"🙏",label:"Leaned on Jesus / talked to Him",pts:1},
-        {emoji:"🌟",label:"A win of my own (anything!)",pts:1}
-      ]
     },
 
     // kept off; every choice gives the same gentle reply, nothing stored
@@ -569,16 +577,18 @@ const CONFIG={
     // points earned when an activity is COMPLETED (first time that day)
     ptsByActivity:{ dailyMoment:2, grounding:2, quickground:2, body:2, colour:2,
       countdown:2, look:2, breathe:2, flashback:2, tasks:1 },
-    hardThingPts:5,          // logging one hard thing
-    defaultAnchorPts:1,      // a reminder tick, unless the item sets its own pts
-    // weekly GOAL (encouragement, never punishment)
+    hardThingPts:5,          // logging one hard thing (up to 3 count/day)
+    defaultAnchorPts:1,      // a tick, unless the item sets its own pts
+    // weekly GOAL (encouragement, never punishment) — shown with counts
     weeklyGoal:{
-      needHardThing:true,    // one 5-pt hard thing this week
-      needAnchor3:true,      // one caring step worth 3+ this week
-      totalPts:25,           // a reasonable weekly total
-      needBackup:true        // back up once this week
+      hardThings:1,          // one 5-star hard thing
+      task3:4,               // four 3-star tasks (any mix)
+      totalPts:50,           // reasonable weekly total
+      needBackup:true        // back up once
     },
     milestoneEvery:20,       // all-time stars per garden step (Phase 2)
+    dailyGoal:10,            // a gentle daily target (not a cap; extra stars still count)
+    dailyRewardPrompt:"You did it today! 🎉 Go and get your reward.",
     weeklyRewardPrompt:"You did it this week! 🎉 Go and get your reward.",
     weeklyPartial:"Some done this week 🌱 — every bit counts. No pressure."
   },
@@ -594,18 +604,18 @@ const CONFIG={
     title:"My room",
     intro:"Every star adds something cosy. It only ever grows — nothing is ever lost. 🌿",
     items:[
-      {id:"plant",  cost:5,   emoji:"🪴", x:274,y:186, label:"a little plant"},
-      {id:"couch",  cost:12,  emoji:"🛋️", x:112,y:190, label:"a comfy couch"},
-      {id:"lamp",   cost:20,  emoji:"💡", x:44, y:150, label:"a warm lamp"},
-      {id:"books",  cost:30,  emoji:"📚", x:250,y:150, label:"some books"},
-      {id:"picture",cost:42,  emoji:"🖼️", x:60, y:66,  label:"a picture"},
-      {id:"cat",    cost:55,  emoji:"🐈", x:168,y:205, label:"a cat friend"},
-      {id:"hplant", cost:70,  emoji:"🌿", x:288,y:78,  label:"a hanging plant"},
-      {id:"drum",   cost:86,  emoji:"🥁", x:62, y:200, label:"a drum"},
-      {id:"teddy",  cost:104, emoji:"🧸", x:132,y:206, label:"a teddy"},
-      {id:"candle", cost:124, emoji:"🕯️", x:212,y:192, label:"a candle"},
-      {id:"flowers",cost:146, emoji:"🌷", x:238,y:200, label:"fresh flowers"},
-      {id:"lights", cost:170, emoji:"✨", x:160,y:28,  label:"fairy lights"}
+      {id:"plant",  cost:5,   emoji:"🪴", x:276,y:184, size:30, label:"a little plant"},
+      {id:"couch",  cost:12,  emoji:"🛋️", x:108,y:188, size:48, label:"a comfy couch"},
+      {id:"lamp",   cost:20,  emoji:"💡", x:42, y:150, size:34, label:"a warm lamp"},
+      {id:"books",  cost:30,  emoji:"📚", x:250,y:152, size:28, label:"some books"},
+      {id:"picture",cost:42,  emoji:"🖼️", x:60, y:64,  size:30, label:"a picture"},
+      {id:"cat",    cost:55,  emoji:"🐈", x:170,y:202, size:34, label:"a cat friend"},
+      {id:"hplant", cost:70,  emoji:"🌿", x:290,y:74,  size:28, label:"a hanging plant"},
+      {id:"drum",   cost:86,  emoji:"🥁", x:60, y:198, size:34, label:"a drum"},
+      {id:"teddy",  cost:104, emoji:"🧸", x:134,y:204, size:30, label:"a teddy"},
+      {id:"candle", cost:124, emoji:"🕯️", x:214,y:190, size:22, label:"a candle"},
+      {id:"flowers",cost:146, emoji:"🌷", x:240,y:198, size:26, label:"fresh flowers"},
+      {id:"lights", cost:170, emoji:"✨", x:160,y:26,  size:28, label:"fairy lights"}
     ],
     gardenAt:190,
     gardenTeaser:"🌱 Your room's looking lovely — a little garden is coming next…"
@@ -677,7 +687,7 @@ function fmtDateTime(ts){
 /* ════════════════════════════════════════════════════════════
    STORAGE  (localStorage — this device only)
    ════════════════════════════════════════════════════════════ */
-const K_MOOD='cc_mood', K_HARD='cc_hard', K_REM='cc_rem', K_PTS='cc_pts', K_WINS='cc_wins', K_PEAK='cc_peak';
+const K_MOOD='cc_mood', K_HARD='cc_hard', K_REM='cc_rem', K_PTS='cc_pts', K_WINS='cc_wins', K_PEAK='cc_peak', K_TODAY='cc_today';
 function lsGet(k,f){try{return JSON.parse(localStorage.getItem(k)||f);}catch{return JSON.parse(f);}}
 function lsSet(k,v){try{localStorage.setItem(k,JSON.stringify(v));}catch{}}
 
@@ -698,7 +708,26 @@ function todayRem(){
   return o;
 }
 
-function clearAllData(){saveMoods([]);saveHard([]);saveRem({});savePts([]);saveWins({});savePeak(0);}
+function clearAllData(){saveMoods([]);saveHard([]);saveRem({});savePts([]);saveWins({});savePeak(0);saveToday({});}
+
+/* ── Today list: per-item tick COUNT for today (reset daily) ── */
+function loadToday(){return lsGet(K_TODAY,'{}');}
+function saveToday(o){lsSet(K_TODAY,o);}
+function today(){const t=dateKey();let o=loadToday();if(o.date!==t){o={date:t,count:{}};saveToday(o);}if(!o.count)o.count={};return o;}
+function todayCount(id){return (today().count||{})[id]||0;}
+// set an item's count for today; reconciles star ledger (awards/revokes the delta)
+function setTodayCount(id,pts,cap,newCount){
+  newCount=Math.max(0,Math.min(cap,newCount));
+  const o=today(); if(!o.count)o.count={};
+  const dk=dateKey();
+  const src=pts>=5?'hard':(pts>=3?'task3':'task1');
+  for(let n=0;n<cap;n++){
+    const key='today:'+dk+':'+id+':'+n;
+    if(n<newCount) awardPts(src,pts,key);
+    else revokePts(key);
+  }
+  o.count[id]=newCount; saveToday(o);
+}
 
 /* ── peak stars: best-ever total. Only rises. Drives the room so
    corrections (which lower current stars) never remove room items. ── */
@@ -739,13 +768,17 @@ function ptsAllTime(){return loadPts().reduce((s,e)=>s+(e.pts||0),0);}
 function weeklyStatus(){
   const g=(CONFIG.rewards&&CONFIG.rewards.weeklyGoal)||{};
   const ev=weekEvents();
-  const hard=ev.some(e=>e.source==='hard');
-  const anchor3=ev.some(e=>(e.source==='anchor'||e.source==='win')&&(e.pts||0)>=3);
+  const hardCount=ev.filter(e=>e.source==='hard').length;
+  const task3Count=ev.filter(e=>e.source==='task3').length;
   const total=ev.reduce((s,e)=>s+(e.pts||0),0);
   const backup=ev.some(e=>e.source==='backup');
-  const totalOk=!g.totalPts||total>=g.totalPts;
-  const done=(!g.needHardThing||hard)&&(!g.needAnchor3||anchor3)&&totalOk&&(!g.needBackup||backup);
-  return {hard,anchor3,total,totalOk,backup,done};
+  const needHard=g.hardThings||0, needTask3=g.task3||0, needTotal=g.totalPts||0;
+  const hardOk=hardCount>=needHard;
+  const task3Ok=task3Count>=needTask3;
+  const totalOk=total>=needTotal;
+  const backupOk=!g.needBackup||backup;
+  const done=hardOk&&task3Ok&&totalOk&&backupOk;
+  return {hardCount,needHard,task3Count,needTask3,total,needTotal,totalOk,backup,backupOk,hardOk,task3Ok,done};
 }
 // award for finishing an activity (once per activity per day)
 function awardActivity(id){
@@ -937,8 +970,7 @@ function reset(d){
     case 'countdown':  return{current:d.start,started:false};
     case 'breathing':  return{running:false,pi:0};
     case 'taskList':   return{done:{}};
-    case 'reminderList':return{expanded:{}};
-    case 'winList':    return{};
+    case 'todayList':  return{};
     case 'hardThing':  return{text:'',saved:false};
     case 'moodEntry':  return{score:null,note:''};
     case 'nameIt':     return{picked:null};
@@ -972,7 +1004,7 @@ function draw(){
   const views={
     home:renderHome,finished:renderFinished,flowdone:renderFlowDone,
     history:renderHistory,hardhistory:renderHardHistory,data:renderData,
-    struggling:renderStruggling,more:renderMore,rewards:renderRewards,activity:renderActivity
+    struggling:renderStruggling,more:renderMore,rewards:renderRewards,earn:renderEarn,activity:renderActivity
   };
   app.innerHTML=(views[ST.view]||renderHome)();
   bind();
@@ -1061,8 +1093,7 @@ function renderMore(){
   const skip={mood:1,reminders:1,hardthing:1,quickground:1,flashback:1};
   const practices=CONFIG.order.filter(id=>A[id]&&A[id].enabled&&!skip[id]).map(rowFor).join('');
   const dayRows=[
-    (A.mywins&&A.mywins.enabled)?rowFor('mywins'):'',
-    (A.reminders&&A.reminders.enabled)?rowFor('reminders'):'',
+    (A.today&&A.today.enabled)?rowFor('today'):'',
     (A.hardthing&&A.hardthing.enabled)?rowFor('hardthing'):''
   ].join('');
   const recRows=`
@@ -1096,7 +1127,7 @@ function renderRoomScene(peak){
   const r=CONFIG.room;
   if(!r||!r.enabled)return'';
   const items=r.items.filter(it=>peak>=it.cost)
-    .map(it=>`<text x="${it.x}" y="${it.y}" font-size="26" text-anchor="middle" dominant-baseline="middle">${it.emoji}</text>`).join('');
+    .map(it=>`<text x="${it.x}" y="${it.y}" font-size="${it.size||26}" text-anchor="middle" dominant-baseline="middle">${it.emoji}</text>`).join('');
   return `<svg viewBox="0 0 320 240" width="100%" style="display:block;border-radius:16px" role="img" aria-label="My cosy room">
     <defs>
       <linearGradient id="wall" x1="0" y1="0" x2="0" y2="1">
@@ -1130,10 +1161,10 @@ function renderRewards(){
       <span class="goal-label">${label}</span>
     </div>`;
   const goals=[
-    g.needHardThing?chk(w.hard,"Do one brave, hard thing 💪"):'',
-    g.needAnchor3?chk(w.anchor3,"One caring step (reach out, a hug, help at home) 🤍"):'',
-    g.totalPts?chk(w.totalOk,"Collect "+g.totalPts+" stars this week ("+Math.min(w.total,g.totalPts)+"/"+g.totalPts+") ⭐"):'',
-    g.needBackup?chk(w.backup,"Back up your data once 💾"):''
+    (g.hardThings?chk(w.hardOk,"A 5-star hard thing — "+w.hardCount+" / "+w.needHard+" 💪"):''),
+    (g.task3?chk(w.task3Ok,"3-star tasks — "+w.task3Count+" / "+w.needTask3+" 🤍"):''),
+    (g.totalPts?chk(w.totalOk,"Stars this week — "+Math.min(w.total,w.needTotal)+" / "+w.needTotal+" ⭐"):''),
+    (g.needBackup?chk(w.backupOk,"Back up once 💾"):'')
   ].join('');
   const banner=w.done
     ? `<div class="reward-win">🎉<div>${esc(r.weeklyRewardPrompt)}</div></div>`
@@ -1153,6 +1184,15 @@ function renderRewards(){
       <div class="room-cap">${caption}</div>`;
   }
 
+  // daily goal (gentle target; not a cap — extra stars still grow the room)
+  const dg=r.dailyGoal||0, td=ptsToday();
+  let dailyBlock='';
+  if(dg){
+    dailyBlock=(td>=dg)
+      ? `<div class="reward-win">🎉<div>${esc(r.dailyRewardPrompt)}</div><small>Every extra star still grows your room 🌿</small></div>`
+      : `<div class="daily-prog">Today ⭐ ${td} / ${dg} — nearly at today's little win 🌱</div>`;
+  }
+
   return `<div class="bar">
     <button class="iconbtn" data-home>${I.back}</button><span class="bar-title">${room&&room.enabled?room.title:r.title}</span>
   </div>
@@ -1162,13 +1202,38 @@ function renderRewards(){
       <div class="st-num">⭐ ${ptsToday()}</div>
       <div class="st-cap">stars today · ⭐ ${ptsThisWeek()} this week · 🌟 ${ptsAllTime()} all-time</div>
     </div>
-    ${(CONFIG.activities.mywins&&CONFIG.activities.mywins.enabled)?`<button class="btn" data-open="mywins" style="background:#10b981">✅ Tick today's wins</button>`:''}
+    ${dailyBlock}
+    ${(CONFIG.activities.today&&CONFIG.activities.today.enabled)?`<button class="btn" data-open="today" style="background:#10b981">✅ Open today's list</button>`:''}
+    <button class="btn-soft" data-earn style="width:100%">How to earn stars ⭐</button>
     <div class="goal-card">
       <div class="goal-title">This week's little goal</div>
       ${goals}
       ${banner}
     </div>
     <p class="hint" style="max-width:none">No streaks, no pressure. Miss a day and nothing is lost — your room keeps everything it's grown. 💛</p>
+  </div>`;
+}
+
+/* ── How to earn stars — one clear place listing every way ── */
+function renderEarn(){
+  const r=CONFIG.rewards, A=CONFIG.activities;
+  const hard=(A.hardthing&&A.hardthing.enabled)?r.hardThingPts:null;
+  const row=(stars,title,desc)=>`
+    <div class="earn-row">
+      <div class="earn-stars">${'⭐'.repeat(Math.min(stars,5))}</div>
+      <div class="earn-txt"><b>${stars} star${stars>1?'s':''} — ${title}</b><span>${desc}</span></div>
+    </div>`;
+  return `<div class="bar">
+    <button class="iconbtn" data-home>${I.back}</button><span class="bar-title">How to earn stars</span>
+  </div>
+  <div class="pane fade" style="justify-content:flex-start;padding-top:16px;gap:11px">
+    <p class="hint" style="max-width:none">Everything you do adds stars, and every star grows your room. Here's what earns what 🌿</p>
+    ${hard?row(hard,"one hard thing","Write it in <b>One hard thing</b> — the bravest, most valuable one 💪"):''}
+    ${row(3,"a caring step","In <b>Tick today's wins</b> or Today's anchors: a hug with Mum, reaching out, helping at home 🤍")}
+    ${row(2,"a calm practice","Finish any practice — 5·4·3·2·1, Breathe, Settle your body, and more 🌊")}
+    ${row(2,"the Start here routine","Do your gentle daily routine, start to finish ▶️")}
+    ${row(1,"a little win","Tick anything in <b>Tick today's wins</b> — every small thing counts 🌟")}
+    <div class="earn-note">💛 Do more than the daily goal? Even better — the extra stars still grow your room. Tapped by mistake? Just untick; it's only a correction, never a telling-off.</div>
   </div>`;
 }
 
@@ -1190,7 +1255,7 @@ function shell(title,inner){
 function renderActivity(){
   const d=CONFIG.activities[ST.id];
   const fn={sensory:rSensory,sequence:rSequence,colourHunt:rColour,countdown:rCountdown,
-    breathing:rBreathe,taskList:rTasks,reminderList:rReminders,winList:rMyWins,hardThing:rHardThing,
+    breathing:rBreathe,taskList:rTasks,todayList:rToday,hardThing:rHardThing,
     moodEntry:rMoodEntry,nameIt:rNameIt}[d.type];
   return shell(d.title,fn?fn(d):'');
 }
@@ -1296,53 +1361,42 @@ function rTasks(d){
   </div>`;
 }
 
-/* ── Reminders (daily anchors — grouped; ticks persist for today, reset next day) ── */
-function rReminders(d){
-  const state=todayRem();
-  const exp=ST.a.expanded||{};
-  const groups=d.groups||[{name:"",open:true}];
-  let html='';
-  groups.forEach((g,gi)=>{
-    const itemsHtml=d.items
-      .map((it,k)=>({it:it,k:k}))
-      .filter(x=>(x.it.group||0)===gi)
-      .map(x=>`
-        <button class="task ${state.done[x.k]?'done':''}" data-rem="${x.k}">
-          <span class="emoji">${x.it.emoji}</span><b>${esc(x.it.label)}</b><span class="box">${I.check}</span>
-        </button>`).join('');
-    if(!itemsHtml)return;
-    const isOpen=g.open||exp[gi];
-    html+=`<div class="rem-group">`;
-    if(g.name){
-      html+=`<div class="rem-glabel">${esc(g.name)}</div>`;
-    }
-    if(isOpen){
-      html+=`<div class="tasks">${itemsHtml}</div>`;
+/* ── Today ✨ (merged: Mind & heart + Things I did; multi-tick with per-item cap) ── */
+function rToday(d){
+  const cap=it=>it.cap||((it.pts||1)>=3?3:1);
+  const renderItem=it=>{
+    const pts=it.pts||1, c=cap(it), n=todayCount(it.id);
+    let boxes;
+    if(c===1){
+      boxes=`<button class="box ${n>0?'on':''}" data-t1="${it.id}" data-pts="${pts}">${n>0?I.check:''}</button>`;
     }else{
-      const n=d.items.filter(it=>(it.group||0)===gi).length;
-      html+=`<button class="rem-more" data-remexp="${gi}">＋ ${esc(g.name||'more')} (${n})</button>`;
+      let bs='';
+      for(let i=0;i<c;i++) bs+=`<button class="mbox ${i<n?'on':''}" data-tm="${it.id}" data-pts="${pts}" data-cap="${c}" data-box="${i}">${i<n?I.check:''}</button>`;
+      boxes=`<span class="multi-box">${bs}</span>`;
     }
-    html+=`</div>`;
-  });
-  return `<div class="gap" style="gap:14px">
-    <p class="hint">${d.note}</p>
-    <div style="width:100%;display:flex;flex-direction:column;gap:14px">${html}</div>
-    <button class="btn" data-finish style="background:${d.color}">${d.doneText}</button>
-  </div>`;
-}
-
-/* ── My wins (self-check; tick = star, untick = takes it back) ── */
-function rMyWins(d){
-  const state=todayWins();
-  const items=d.items.map((it,k)=>`
-    <button class="task ${state.done[k]?'done':''}" data-win="${k}">
+    return `<div class="task ${n>0?'done':''}">
       <span class="emoji">${it.emoji}</span><b>${esc(it.label)}</b>
-      <span class="wpts">+${it.pts||1}</span>
-      <span class="box">${I.check}</span>
-    </button>`).join('');
+      <span class="wpts">+${pts}</span>${boxes}</div>`;
+  };
+  const section=(key,label)=>{
+    const items=d.items.filter(it=>(it.sec||'did')===key).map(renderItem).join('');
+    return items?`<div class="rem-glabel">${label}</div><div class="tasks">${items}</div>`:'';
+  };
+  const S=d.sections||{mind:"Mind & heart",did:"Things I did"};
+  const A=CONFIG.activities;
+  const hardLink=(A.hardthing&&A.hardthing.enabled)?`
+    <button class="today-hard" data-open="hardthing">
+      <span class="emoji">💪</span>
+      <span class="th-txt"><b>${A.hardthing.title}</b><span>write a hard thing you did — worth 5 ⭐</span></span>
+      <span class="th-go">＋</span>
+    </button>`:'';
   return `<div class="gap" style="gap:14px">
     <p class="hint">${d.note}</p>
-    <div class="tasks">${items}</div>
+    <div style="width:100%;display:flex;flex-direction:column;gap:14px">
+      ${hardLink}
+      ${section('mind',S.mind)}
+      ${section('did',S.did)}
+    </div>
     <button class="btn" data-finish style="background:${d.color}">${d.doneText}</button>
   </div>`;
 }
@@ -1571,6 +1625,7 @@ function bind(){
   q('[data-struggling]',b=>b.onclick=()=>go('struggling'));
   q('[data-more]',b=>b.onclick=()=>go('more'));
   q('[data-rewards]',b=>b.onclick=()=>go('rewards'));
+  q('[data-earn]',b=>b.onclick=()=>go('earn'));
   q('[data-seg]',b=>b.onclick=()=>{ST.histSeg=b.dataset.seg;go('history');});
 
   // data screen
@@ -1600,21 +1655,19 @@ function bind(){
   q('[data-cdnext]',b=>b.onclick=()=>{const a=ST.a,d=CONFIG.activities[ST.id];a.current-=d.step;a.current<0?finish():draw();});
   // tasks
   q('[data-task]',b=>b.onclick=()=>{const k=b.dataset.task;ST.a.done[k]=!ST.a.done[k];draw();});
-  // reminders (persist for today; untick takes the star back — a correction)
-  q('[data-rem]',b=>b.onclick=()=>{
-    const k=b.dataset.rem;const o=todayRem();const on=!o.done[k];o.done[k]=on;saveRem(o);
-    const it=CONFIG.activities.reminders.items[k];const pts=(it&&it.pts)||CONFIG.rewards.defaultAnchorPts;
-    const key='rem:'+dateKey()+':'+k;
-    if(on)awardPts('anchor',pts,key); else revokePts(key);
+  // Today list — single checkbox (1pt items): toggle 0/1
+  q('[data-t1]',b=>b.onclick=()=>{
+    const id=b.dataset.t1, pts=Number(b.dataset.pts);
+    const cur=todayCount(id);
+    setTodayCount(id,pts,1,cur>0?0:1);
     draw();
   });
-  q('[data-remexp]',b=>b.onclick=()=>{if(!ST.a.expanded)ST.a.expanded={};ST.a.expanded[b.dataset.remexp]=true;draw();});
-  // my wins (tick = star; untick = takes it back)
-  q('[data-win]',b=>b.onclick=()=>{
-    const k=b.dataset.win;const o=todayWins();const on=!o.done[k];o.done[k]=on;saveWins(o);
-    const it=CONFIG.activities.mywins.items[k];const pts=(it&&it.pts)||1;
-    const key='win:'+dateKey()+':'+k;
-    if(on)awardPts('win',pts,key); else revokePts(key);
+  // Today list — multi checkbox (3pt items): star-rating style, click a box to set count
+  q('[data-tm]',b=>b.onclick=()=>{
+    const id=b.dataset.tm, pts=Number(b.dataset.pts), cap=Number(b.dataset.cap), i=Number(b.dataset.box);
+    const cur=todayCount(id);
+    const target=(i+1===cur)?i:i+1;   // clicking the last-filled box toggles it off
+    setTodayCount(id,pts,cap,target);
     draw();
   });
   // delete a hard-thing record (correction — also takes its star back)
@@ -1641,8 +1694,9 @@ function bind(){
   q('[data-hardsave]',b=>b.onclick=()=>{
     const tn=document.getElementById('hard-note');const text=tn?tn.value:ST.a.text||'';
     if(!text.trim())return;
+    const todayHard=loadPts().filter(e=>e.source==='hard'&&dateKey(e.ts)===dateKey()).length;
     const ts=addHard(text.trim());
-    awardPts('hard',CONFIG.rewards.hardThingPts,'hard:'+ts);
+    if(todayHard<3) awardPts('hard',CONFIG.rewards.hardThingPts,'hard:'+ts);
     if(ST.flow)return advFlow();
     ST.a.saved=true;draw();
   });
