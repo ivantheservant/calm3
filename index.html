@@ -136,6 +136,8 @@ h1.greet{font-size:26px;line-height:1.25;font-weight:700;color:var(--ink-strong)
 /* room scene */
 .room-wrap{width:100%;border-radius:16px;overflow:hidden;box-shadow:0 8px 22px -12px rgba(45,27,78,.3);
   border:1.5px solid var(--line);}
+.zone-label{font-size:12px;font-weight:700;letter-spacing:.04em;color:var(--ink-soft);
+  text-align:left;width:100%;margin:2px 2px -6px;}
 .room-cap{font-size:13.5px;color:var(--ink-soft);text-align:center;line-height:1.45;
   background:var(--chip);border-radius:12px;padding:8px 12px;width:100%;}
 .daily-prog{width:100%;background:linear-gradient(135deg,#fef9c3,#fef3c7);border:1.5px solid #fde68a;
@@ -583,7 +585,7 @@ const CONFIG={
     weeklyGoal:{
       hardThings:1,          // one 5-star hard thing
       task3:4,               // four 3-star tasks (any mix)
-      totalPts:50,           // reasonable weekly total
+      totalPts:85,           // reasonable weekly total
       needBackup:true        // back up once
     },
     milestoneEvery:20,       // all-time stars per garden step (Phase 2)
@@ -603,22 +605,35 @@ const CONFIG={
     enabled:true,
     title:"My room",
     intro:"Every star adds something cosy. It only ever grows — nothing is ever lost. 🌿",
+    zones:{ room:"My room 🛋️", nook:"My cosy nook 🌸" },
     items:[
-      {id:"plant",  cost:5,   emoji:"🪴", x:276,y:184, size:30, label:"a little plant"},
-      {id:"couch",  cost:12,  emoji:"🛋️", x:108,y:188, size:48, label:"a comfy couch"},
-      {id:"lamp",   cost:20,  emoji:"💡", x:42, y:150, size:34, label:"a warm lamp"},
-      {id:"books",  cost:30,  emoji:"📚", x:250,y:152, size:28, label:"some books"},
-      {id:"picture",cost:42,  emoji:"🖼️", x:60, y:64,  size:30, label:"a picture"},
-      {id:"cat",    cost:55,  emoji:"🐈", x:170,y:202, size:34, label:"a cat friend"},
-      {id:"hplant", cost:70,  emoji:"🌿", x:290,y:74,  size:28, label:"a hanging plant"},
-      {id:"drum",   cost:86,  emoji:"🥁", x:60, y:198, size:34, label:"a drum"},
-      {id:"teddy",  cost:104, emoji:"🧸", x:134,y:204, size:30, label:"a teddy"},
-      {id:"candle", cost:124, emoji:"🕯️", x:214,y:190, size:22, label:"a candle"},
-      {id:"flowers",cost:146, emoji:"🌷", x:240,y:198, size:26, label:"fresh flowers"},
-      {id:"lights", cost:170, emoji:"✨", x:160,y:26,  size:28, label:"fairy lights"}
+      // ── zone: room ── (costs interleave with nook so both fill over time)
+      {id:"plant",  zone:"room", cost:6,   emoji:"🪴", x:278,y:186, size:30, label:"a little plant"},
+      {id:"couch",  zone:"room", cost:24,  emoji:"🛋️", x:106,y:188, size:46, label:"a comfy couch"},
+      {id:"lamp",   zone:"room", cost:52,  emoji:"💡", x:42, y:150, size:32, label:"a warm lamp"},
+      {id:"books",  zone:"room", cost:85,  emoji:"📚", x:252,y:150, size:26, label:"some books"},
+      {id:"picture",zone:"room", cost:120, emoji:"🖼️", x:58, y:62,  size:28, label:"a picture"},
+      {id:"cat",    zone:"room", cost:156, emoji:"🐈", x:172,y:202, size:32, label:"a cat friend"},
+      {id:"chair",  zone:"room", cost:192, emoji:"🪑", x:302,y:196, size:30, label:"a comfy chair"},
+      {id:"clock",  zone:"room", cost:228, emoji:"🕰️", x:250,y:58,  size:26, label:"a wall clock"},
+      {id:"guitar", zone:"room", cost:264, emoji:"🎸", x:34, y:196, size:32, label:"a guitar"},
+      {id:"mirror", zone:"room", cost:300, emoji:"🪞", x:300,y:96,  size:28, label:"a mirror"},
+      {id:"teddy",  zone:"room", cost:335, emoji:"🧸", x:140,y:205, size:30, label:"a teddy"},
+      // ── zone: nook ──
+      {id:"sprout", zone:"nook", cost:14,  emoji:"🌱", x:52, y:150, size:26, label:"a sprout"},
+      {id:"hplant", zone:"nook", cost:38,  emoji:"🌿", x:286,y:66,  size:30, label:"a hanging plant"},
+      {id:"candle", zone:"nook", cost:68,  emoji:"🕯️", x:216,y:188, size:22, label:"a candle"},
+      {id:"flowers",zone:"nook", cost:102, emoji:"🌷", x:252,y:190, size:26, label:"fresh flowers"},
+      {id:"openbk", zone:"nook", cost:138, emoji:"📖", x:60, y:190, size:26, label:"an open book"},
+      {id:"basket", zone:"nook", cost:174, emoji:"🧺", x:120,y:194, size:30, label:"a cosy basket"},
+      {id:"tea",    zone:"nook", cost:210, emoji:"☕", x:182,y:193, size:24, label:"a cup of tea"},
+      {id:"bird",   zone:"nook", cost:246, emoji:"🐦", x:290,y:118, size:24, label:"a little bird"},
+      {id:"nlights",zone:"nook", cost:282, emoji:"✨", x:160,y:26,  size:28, label:"fairy lights"},
+      {id:"cactus", zone:"nook", cost:318, emoji:"🌵", x:302,y:186, size:28, label:"a cactus"},
+      {id:"sunflow",zone:"nook", cost:352, emoji:"🌻", x:40, y:68,  size:28, label:"a sunflower"}
     ],
-    gardenAt:190,
-    gardenTeaser:"🌱 Your room's looking lovely — a little garden is coming next…"
+    gardenAt:360,
+    gardenTeaser:"🌱 Your room and nook are full — lovely! A little garden is coming next…"
   }
 };
 
@@ -1122,32 +1137,48 @@ function renderMore(){
   </div>`;
 }
 
-/* ── My room (Phase 2) — cosy scene that fills up with earned stars ── */
-function renderRoomScene(peak){
-  const r=CONFIG.room;
-  if(!r||!r.enabled)return'';
-  const items=r.items.filter(it=>peak>=it.cost)
-    .map(it=>`<text x="${it.x}" y="${it.y}" font-size="${it.size||26}" text-anchor="middle" dominant-baseline="middle">${it.emoji}</text>`).join('');
-  return `<svg viewBox="0 0 320 240" width="100%" style="display:block;border-radius:16px" role="img" aria-label="My cosy room">
+/* ── My room (Phase 2) — two zones (room + nook) that fill up with stars ── */
+function roomSceneSVG(items, theme, uid, label){
+  const parts=items.map(it=>`<text x="${it.x}" y="${it.y}" font-size="${it.size||26}" text-anchor="middle" dominant-baseline="middle">${it.emoji}</text>`).join('');
+  return `<svg viewBox="0 0 320 200" width="100%" style="display:block" role="img" aria-label="${label}">
     <defs>
-      <linearGradient id="wall" x1="0" y1="0" x2="0" y2="1">
-        <stop offset="0" stop-color="#fdf2f8"/><stop offset="1" stop-color="#f5edff"/>
+      <linearGradient id="wall${uid}" x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0" stop-color="${theme.wallTop}"/><stop offset="1" stop-color="${theme.wallBot}"/>
       </linearGradient>
-      <linearGradient id="sky" x1="0" y1="0" x2="0" y2="1">
+      <linearGradient id="sky${uid}" x1="0" y1="0" x2="0" y2="1">
         <stop offset="0" stop-color="#bae6fd"/><stop offset="1" stop-color="#e0f2fe"/>
       </linearGradient>
     </defs>
-    <rect x="0" y="0" width="320" height="168" fill="url(#wall)"/>
-    <rect x="0" y="168" width="320" height="72" fill="#f0d9b5"/>
-    <rect x="0" y="164" width="320" height="6" fill="#e7c9a0"/>
-    <rect x="120" y="40" width="80" height="70" rx="6" fill="#e7c9a0"/>
-    <rect x="126" y="46" width="68" height="58" rx="4" fill="url(#sky)"/>
-    <circle cx="176" cy="62" r="8" fill="#fde68a" opacity=".9"/>
-    <path d="M132 96 q10 -14 20 0 q10 -12 20 0 l0 8 l-40 0 z" fill="#bbf7d0"/>
-    <line x1="160" y1="46" x2="160" y2="104" stroke="#e7c9a0" stroke-width="3"/>
-    <line x1="126" y1="75" x2="194" y2="75" stroke="#e7c9a0" stroke-width="3"/>
-    ${items}
+    <rect x="0" y="0" width="320" height="150" fill="url(#wall${uid})"/>
+    <rect x="0" y="150" width="320" height="50" fill="${theme.floor}"/>
+    <rect x="0" y="146" width="320" height="5" fill="${theme.floorEdge}"/>
+    <rect x="124" y="34" width="72" height="64" rx="6" fill="${theme.floorEdge}"/>
+    <rect x="130" y="40" width="60" height="52" rx="4" fill="url(#sky${uid})"/>
+    <circle cx="176" cy="54" r="7" fill="#fde68a" opacity=".9"/>
+    <path d="M136 84 q9 -12 18 0 q9 -10 18 0 l0 8 l-36 0 z" fill="#bbf7d0"/>
+    <line x1="160" y1="40" x2="160" y2="92" stroke="${theme.floorEdge}" stroke-width="3"/>
+    <line x1="130" y1="66" x2="190" y2="66" stroke="${theme.floorEdge}" stroke-width="3"/>
+    ${parts}
   </svg>`;
+}
+function renderRoomScene(peak){
+  const r=CONFIG.room;
+  if(!r||!r.enabled)return'';
+  const zones=r.zones||{room:"My room"};
+  const themes={
+    room:{wallTop:"#fdf2f8",wallBot:"#f5edff",floor:"#f0d9b5",floorEdge:"#e7c9a0"},
+    nook:{wallTop:"#ecfdf5",wallBot:"#f0fdfa",floor:"#e8e0cf",floorEdge:"#d6cbb2"}
+  };
+  let out='';
+  Object.keys(zones).forEach(z=>{
+    const all=r.items.filter(it=>(it.zone||'room')===z);
+    const unlocked=all.filter(it=>peak>=it.cost);
+    // always show the "room"; show other zones once they have an unlocked item
+    if(z!=='room' && unlocked.length===0) return;
+    out+=`<div class="zone-label">${zones[z]}</div>
+      <div class="room-wrap">${roomSceneSVG(unlocked, themes[z]||themes.room, z, zones[z])}</div>`;
+  });
+  return out;
 }
 
 /* ── Rewards / My room — room scene + gentle stars + weekly goal ── */
@@ -1180,7 +1211,7 @@ function renderRewards(){
       ? esc(room.gardenTeaser)
       : (next?('Next: '+next.emoji+' '+esc(next.label)+' at '+next.cost+' stars — '+(next.cost-peak)+' to go'):'Your room is full — lovely! 🌸');
     roomBlock=`
-      <div class="room-wrap">${renderRoomScene(peak)}</div>
+      ${renderRoomScene(peak)}
       <div class="room-cap">${caption}</div>`;
   }
 
